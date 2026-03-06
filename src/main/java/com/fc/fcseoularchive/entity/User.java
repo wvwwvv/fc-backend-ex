@@ -1,0 +1,119 @@
+package com.fc.fcseoularchive.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+
+@Getter
+@Entity
+@Table(
+        name = "user",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_users_user_id", columnNames = "user_id"),
+                @UniqueConstraint(name = "uk_users_nickname", columnNames = "nickname")
+        }
+)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // PROTECTED : 외부에서 new User() 막기
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.USER;
+
+    @Column(name = "user_id", nullable = false, length = 50)
+    private String userId;
+
+    @Column(nullable = false, length = 255)
+    private String password;
+
+    @Column(nullable = false, length = 30)
+    private String nickname;
+
+    @Column(nullable = false)
+    private Integer points = 0;
+
+    @Column(name = "profile_image", length = 512)
+    private String profileImage;
+
+    @Column(name = "season_ticket")
+    private LocalDateTime seasonTicket;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Builder
+    public User(String userId, String password, String nickname, Role role,
+                Integer points, String profileImage, LocalDateTime seasonTicket,
+                LocalDateTime lastLogin, LocalDateTime deletedAt) {
+        this.userId = userId;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = (role != null) ? role : Role.USER;
+        this.points = (points != null) ? points : 0;
+        this.profileImage = profileImage;
+        this.seasonTicket = seasonTicket;
+        this.lastLogin = lastLogin;
+        this.deletedAt = deletedAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+
+        if (this.role == null) {
+            this.role = Role.USER;
+        }
+        if (this.points == null) {
+            this.points = 0;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
+
+    public void addPoints(int amount) {
+        this.points += amount;
+    }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+}
