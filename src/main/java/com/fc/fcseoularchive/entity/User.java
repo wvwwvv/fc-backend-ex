@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(
-        name = "user",
+        name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_users_user_id", columnNames = "user_id"),
                 @UniqueConstraint(name = "uk_users_nickname", columnNames = "nickname")
@@ -116,4 +116,16 @@ public class User {
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
     }
+
+
+    // 개발용
+    public User(String userId, String password, String nickname) {
+        this.userId = userId;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = Role.USER;
+        this.points = 0;
+        this.profileImage = null;
+    }
+
 }
