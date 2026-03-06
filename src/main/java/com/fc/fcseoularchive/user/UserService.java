@@ -2,6 +2,7 @@ package com.fc.fcseoularchive.user;
 
 
 import com.fc.fcseoularchive.entity.User;
+import com.fc.fcseoularchive.error.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,8 @@ public class UserService {
     // 유저 id 로 조회
     public User getUser(String id) {
         User byUserId = userRepository.findByUserId(id);
+
+
         return byUserId;
     }
 

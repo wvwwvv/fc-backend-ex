@@ -39,3 +39,5 @@ out/
 docker-compose.yml
 
 .env
+
+application.yml
