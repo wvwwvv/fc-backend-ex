@@ -18,15 +18,18 @@ spring:
         show_sql: false
 
   # 나중에 redis 쓰는거 대비
-  #data:
-  #redis:
-  #host: ${SPRING_DATA_REDIS_HOST:localhost}
-  #port: ${SPRING_DATA_REDIS_PORT:6380}
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
 
+# 시크릿 키는 : https://jwtsecretkeygenerator.com/ko/ 여기서 만듦
 jwt:
-  header: Authorization
-  secret: 90a95d35-051f-4ec2-9a42-eb1b2870608e
-  token-validity-in-seconds: 86400
+  secret: CD9KEjLo1DkQB6EMWo8RZPl2i8XAxv4RLVNAC3dmdVf
+  access-token:
+    expire-time: 1800000
+  refresh-token:
+    expire-time: 1209600000
 
 
 # 테스트용
