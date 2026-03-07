@@ -25,10 +25,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Role role = Role.USER;
-
     @Column(name = "user_id", nullable = false, length = 50)
     private String userId;
 
@@ -38,6 +34,10 @@ public class User {
     @Column(nullable = false, length = 30)
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.USER;
+
     @Column(nullable = false)
     private Integer points = 0;
 
@@ -45,7 +45,7 @@ public class User {
     private String profileImage;
 
     @Column(name = "season_ticket")
-    private LocalDateTime seasonTicket;
+    private Integer seasonTicket;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;

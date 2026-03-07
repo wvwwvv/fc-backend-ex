@@ -1,19 +1,22 @@
 package com.fc.fcseoularchive.user;
 
 
-import com.fc.fcseoularchive.entity.Role;
+import com.fc.fcseoularchive.config.jwt.JwtToken;
+import com.fc.fcseoularchive.config.jwt.JwtTokenProvider;
 import com.fc.fcseoularchive.entity.User;
 import com.fc.fcseoularchive.error.ApiException;
+import com.fc.fcseoularchive.user.dto.LoginRequest;
+import com.fc.fcseoularchive.user.dto.LoginResponse;
+import com.fc.fcseoularchive.user.dto.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,27 +24,76 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-//    throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "잘못된 요청입니다.");
-
-    // 유저 생성
+    // 회원 가입
     public void createUser(UserCreateRequest req) {
-
         // 유저 아이디 중복 검사
         if (userRepository.findByUserId(req.getUserId()).isPresent()) {
             throw new ApiException(HttpStatus.CONFLICT, "409", "CONFLICT", "이미 존재하는 아이디입니다.");
         }
-
         // 닉네임 중복 검사
         if (userRepository.findByNickname(req.getUserId()).isPresent()) {
             throw new ApiException(HttpStatus.CONFLICT, "409", "CONFLICT", "이미 존재하는 닉네임입니다.");
         }
-
-        String password = passwordEncoder.encode(req.getPassword()); // 비밀번호 암호화
-
+        // 비밀번호 암호화
+        String password = passwordEncoder.encode(req.getPassword());
         // 회원 생성
         User user = new User(req.getUserId(), password, req.getNickname());
         userRepository.save(user);
+    }
+
+
+    // Id 로 회원 조회
+    public User getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 회원입니다."));
+    }
+
+    //  userId 로 회원 조회
+    public User getUserId(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 회원입니다."));
+    }
+
+    // 닉네임으로 회원 조회
+    public User getNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 회원입니다."));
+    }
+
+    // 로그인
+    public LoginResponse login(LoginRequest req) {
+        User user = userRepository.findByUserId(req.getUserId())
+                .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "401", "UNAUTHORIZED", "존재하지 않은 아이디입니다."));
+
+        // 비밀번호가 틀렸을 경우
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "401", "UNAUTHORIZED", "비밀번호를 다시 입력해주세요.");
+        }
+
+        // 인증서 생성 타입은 Authentication
+        // principal, credntials, authent~~list
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user.getUserId(),
+                null,
+                List.of(new SimpleGrantedAuthority(user.getRole().toString()))
+        );
+
+        // 토큰 생성 ( grantType, accessToken, RefreshToken )
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+        return new LoginResponse(jwtToken, user);
+    }
+
+    // 로그아웃
+
+
+    /**
+     * 관리자용 AP
+     */
+    // 관리자용 전체 회원 조회
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
 

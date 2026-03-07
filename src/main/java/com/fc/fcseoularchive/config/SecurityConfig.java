@@ -60,21 +60,27 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/swagger-ui/**", // Swagger
                                         "/v3/api-docs/**", // Swagger
-                                        "/error/**" // Error Test
+                                        "/error/**", // Error Test
+                                        "/api/users/join",
+                                        "/api/users",
+
+                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
+                                        "/**"
+
                                 ).permitAll()
 
                                 /** POST 전부 열어주는 곳 */
-                                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                                // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
 
 
 
                                 /** 관리자만 가능한 곳! */
-                                .requestMatchers(
-                                        "/admin/**"
-                                ).hasRole("ADMIN")
+//                                .requestMatchers(
+//                                        "/admin/**"
+//                                ).hasRole("ADMIN")
 
                                 /** 위에 없으면 로그인된 회원만 가능! */
-                                .anyRequest().authenticated()
+//                                .anyRequest().authenticated()
                 );
 
         /** JWT 인증을 위해 직접 구현한 필터 UsernamePasswordAuthticationFilter 전에 실행하기 */
