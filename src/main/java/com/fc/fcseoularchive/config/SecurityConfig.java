@@ -5,6 +5,7 @@ import com.fc.fcseoularchive.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -57,16 +58,14 @@ public class SecurityConfig {
                         authorize
                                 /** 다 열어주는 곳 !! */
                                 .requestMatchers(
-                                        "/signup",
-                                        "/",
-                                        "/login",
-
-
                                         "/swagger-ui/**", // Swagger
                                         "/v3/api-docs/**", // Swagger
-
                                         "/error/**" // Error Test
                                 ).permitAll()
+
+                                /** POST 전부 열어주는 곳 */
+                                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+
 
 
                                 /** 관리자만 가능한 곳! */

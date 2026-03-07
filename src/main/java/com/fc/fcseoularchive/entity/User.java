@@ -60,18 +60,16 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String userId, String password, String nickname, Role role,
-                Integer points, String profileImage, LocalDateTime seasonTicket,
-                LocalDateTime lastLogin, LocalDateTime deletedAt) {
+    public User(String userId, String password, String nickname) {
         this.userId = userId;
         this.password = password;
         this.nickname = nickname;
-        this.role = (role != null) ? role : Role.USER;
-        this.points = (points != null) ? points : 0;
-        this.profileImage = profileImage;
-        this.seasonTicket = seasonTicket;
-        this.lastLogin = lastLogin;
-        this.deletedAt = deletedAt;
+        this.role = Role.USER;
+        this.points = 0;
+        this.profileImage = null;
+        this.seasonTicket = null;
+        this.lastLogin = null;
+        this.deletedAt = null;
     }
 
     @PrePersist
@@ -115,17 +113,6 @@ public class User {
 
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
-    }
-
-
-    // 개발용
-    public User(String userId, String password, String nickname) {
-        this.userId = userId;
-        this.password = password;
-        this.nickname = nickname;
-        this.role = Role.USER;
-        this.points = 0;
-        this.profileImage = null;
     }
 
 }
