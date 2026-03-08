@@ -1,13 +1,9 @@
 package com.fc.fcseoularchive.post;
 
-import com.fc.fcseoularchive.entity.Post;
 import com.fc.fcseoularchive.entity.PostStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,4 +25,45 @@ public class PostAdminController {
         List<PostAdminResponse> response = postService.getPostsByStatus(status);
         return ResponseEntity.ok(response);
     }
+
+
+    // 직관 인증 수락 - 200 ok
+    @PostMapping("/posts/{verificationId}/approve")
+    public ResponseEntity<Void> approvePost(
+            @PathVariable Long verificationId
+    ) {
+        postService.ApprovePost(verificationId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 직관 인증 거절 - 204 No Content
+    @PostMapping("/posts/{verificationId}/reject")
+    public ResponseEntity<Void> rejectPost(
+            @PathVariable Long verificationId
+    ) {
+        postService.RejectPost(verificationId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 직관 인증 게시물 pending 으로 되돌리기 - 개발자용
+    @PostMapping("/posts/{verificationId}/pending")
+    public ResponseEntity<Void> resetPostToPending(
+            @PathVariable Long verificationId
+    ) {
+        postService.resetPostToPending(verificationId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 직관 인증 게시물 draft 로 되돌리기 - 개발자용
+    @PostMapping("/posts/{verificationId}/draft")
+    public ResponseEntity<Void> resetPostToDraft(
+            @PathVariable Long verificationId
+    ) {
+        postService.resetPostToDraft(verificationId);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
 }

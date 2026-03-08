@@ -74,4 +74,20 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void approve() {
+        this.status = PostStatus.APPROVED;
+    }
+
+    public void reject() {
+        this.status = PostStatus.REJECTED;
+    }
+
+    public void resetToPending() {
+        this.status = PostStatus.PENDING;
+    }
+
+    public void resetToDraft() {
+        this.status = PostStatus.DRAFT;
+    }
+
 }

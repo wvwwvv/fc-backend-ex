@@ -63,12 +63,44 @@ public class PostService {
         }
     }
 
+    // 직관 인증 게시글 조회
     @Transactional(readOnly = true)
     public List<PostAdminResponse> getPostsByStatus(PostStatus status) {
         return postRepository.findAllByStatus(status)
                 .stream()
                 .map(PostAdminResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    // 직관 인증 게시글 승인
+    @Transactional
+    public void ApprovePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
+        post.approve();
+    }
+
+    // 직관 인증 게시글 거절
+    @Transactional
+    public void RejectPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
+        post.reject();
+    }
+
+    // 직관 인증 게시글 PENDING 으로
+    @Transactional
+    public void resetPostToPending(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
+        post.resetToPending();
+    }
+
+    @Transactional
+    public void resetPostToDraft(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
+        post.resetToDraft();
     }
 
 
