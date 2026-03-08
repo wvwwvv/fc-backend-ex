@@ -12,7 +12,7 @@ import java.util.List;
 
 @Tag(name = "2. GameController", description = "경기 관련 API")
 @RestController
-@RequestMapping("api/games")
+@RequestMapping("/api/games")
 @RequiredArgsConstructor
 public class GameController {
 
