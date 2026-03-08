@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.Post;
+package com.fc.fcseoularchive.post;
 
-import com.fc.fcseoularchive.Image.ImageRepository;
+import com.fc.fcseoularchive.image.ImageRepository;
 import com.fc.fcseoularchive.entity.*;
 import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.game.GameRepository;

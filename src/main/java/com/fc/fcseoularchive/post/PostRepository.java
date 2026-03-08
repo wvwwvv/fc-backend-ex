@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.Post;
+package com.fc.fcseoularchive.post;
 
 import com.fc.fcseoularchive.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

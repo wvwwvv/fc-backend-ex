@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.Post;
+package com.fc.fcseoularchive.post;
 
 import lombok.Getter;
 import lombok.Setter;
