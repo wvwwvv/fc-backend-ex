@@ -73,8 +73,35 @@ public class GameService {
 
     }
 
-    // admin : 경기 1개 정보 수정
+    // admin : 경기 1개 정보 수정 (모든 필드 제어 가능)
+    @Transactional
+    public Game updateGame(Long gameId, GameAdminRequest request) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
 
+        // 모든 필드 업데이트
+        game.adminUpdate(
+                request.getDate(),
+                request.getStadium(),
+                request.getRound(),
+                request.getHomeTeam(),
+                request.getAwayTeam(),
+                request.getHomeScore(),
+                request.getAwayScore(),
+                request.getResult(),
+                request.getDeletedAt()
+        );
 
+        return gameRepository.save(game);
+    }
+
+    // admin : 경기 삭제
+    @Transactional
+    public void deleteGame(Long gameId) {
+        gameRepository.findById(gameId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "경기가 존재하지 않습니다."));
+
+        gameRepository.deleteById(gameId);
+    }
 }
 

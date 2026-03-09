@@ -90,6 +90,19 @@ public class Game {
         this.deletedAt = LocalDateTime.now();
     }
 
-
-
+    // admin : 게임 정보 update
+    public void adminUpdate(LocalDateTime date, String stadium, Integer round,
+                            String homeTeam, String awayTeam, Integer homeScore,
+                            Integer awayScore, GameResult result, LocalDateTime deletedAt) {
+        this.date = date;
+        this.stadium = stadium;
+        this.round = round;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+        this.result = result;
+        this.deletedAt = deletedAt;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

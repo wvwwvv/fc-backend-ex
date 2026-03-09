@@ -99,6 +99,7 @@ public class AdminController {
     }
 
     // 경기 정보 추가
+    @Operation(summary = "경기 정보 추가")
     @PostMapping("/game")
     public ResponseEntity<Void> addGame(@RequestBody GameAdminRequest request) {
         gameService.addGame(request);
@@ -106,6 +107,7 @@ public class AdminController {
     }
 
     // 경기 정보 가져 오기
+    @Operation(summary = "경기 정보 검색")
     @GetMapping("/game/{gameId}")
     public ResponseEntity<Game> getGame (@PathVariable Long gameId) {
         Game game = gameService.getGame(gameId);
@@ -113,14 +115,23 @@ public class AdminController {
     }
 
     // 경기 정보 수정 하기
-    /*@PutMapping("/game/{gameId}")
-    public ResponseEntity<Game> getGame (
+    @Operation(summary = "경기 정보 수정")
+    @PutMapping("/game/{gameId}")
+    public ResponseEntity<Game> updateGame (
             @PathVariable Long gameId,
             @RequestBody GameAdminRequest request
     ) {
         Game game = gameService.updateGame(gameId, request);
         return ResponseEntity.status(HttpStatus.OK).body(game);
 
-    }*/
+    }
+
+    // 경기 정보 삭제 하기
+    @Operation(summary = "경기 정보 삭제")
+    @DeleteMapping("/game/{gameId}")
+    public ResponseEntity<Void> deleteGame (@PathVariable Long gameId) {
+        gameService.deleteGame(gameId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
