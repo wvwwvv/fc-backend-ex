@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +29,11 @@ public class GameController {
     }
 
 
-    // todo 경기 일정 admin 웹에서 등록 처리
+    /*@Operation(summary = "특정 년도의 경기 조회")
+    @GetMapping("/{year}")
+    public ResponseEntity<List<GameResponse>> getGamesByYear(@PathVariable int year) {
+        List<GameResponse> response = gameService.getAllGamesByYear(year);
+
+        return ResponseEntity.ok(response);
+    }*/
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,5 +104,14 @@ public class GameService {
 
         gameRepository.deleteById(gameId);
     }
+
+    /*public List<GameResponse> getAllGamesByYear(int year) {
+
+        *//*
+           date 의 YYYY 가 year 와 동일한 game 만 list 에 담기
+        *//*
+
+
+    }*/
 }
 
