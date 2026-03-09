@@ -2,12 +2,18 @@ package com.fc.fcseoularchive.user;
 
 
 import com.fc.fcseoularchive.entity.User;
+import com.fc.fcseoularchive.user.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "1. UserController", description = "유저 관련 API")
+import java.util.List;
+
+@Tag(name = "1. UserController")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -15,25 +21,63 @@ public class UserController {
 
     private final UserService userService;
 
-
-
-
-
-
-    /**
-     * 테스트용 (JWT , Security 등등 제외)
-     */
-    @PostMapping
+    @Operation(summary = "회원 가입")
+    @PostMapping("/join")
     public ResponseEntity<Void> createUser(@RequestBody UserCreateRequest req) {
         userService.createUser(req);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping()
-    public ResponseEntity<User> getUser(@RequestParam String userId) {
-        return ResponseEntity.ok().body(userService.getUser(userId));
+    @Operation(summary = "id로 유저 1명 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(userService.getUser(id)));
     }
 
+    @Operation(summary = "유저 아이디로 1명 조회")
+    @GetMapping("/user-id/{userId}")
+    public ResponseEntity<UserResponse> getUserId(@PathVariable String userId) {
+        User user = userService.getUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(user));
+    }
 
+    @Operation(summary = "유저 닉네임으로 1명 조회")
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<UserResponse> getNickname(@PathVariable String nickname) {
+        User user = userService.getNickname(nickname);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(user));
+    }
+
+    @Operation(summary = "로그인")
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req){
+        LoginResponse login = userService.login(req);
+        return ResponseEntity.status(HttpStatus.OK).body(login);
+    }
+
+    @Operation(summary = "리프레시 토큰 및 일반 토큰 재발급")
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshReqeust req){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(req));
+    }
+
+    /**
+     * 로그아웃은 별도 API 로 만들지 않는다.
+     * 로그아웃 방법
+     * 1. 프론트엔드에서 토큰 삭제
+     *  -> 가장 간단함
+     *  -> 단, 서버에서는 토큰이 유효함
+     *
+     * 2. 토큰 블랙리스트 관리
+     *  -> 토큰 유효 관리 가능
+     *  -> 단, 매 요청마다 블랙리스트 확인 즉, stateless 불가능
+     *
+     * 3. 리프레시 토큰의 만료처리
+     *  -> 토큰 재발급 차단 가능
+     *  -> 단, 2번 과 마찬가지로 stateless 불가능
+     *
+     *  2,3 은 구현이 난이도 증가 및 stateless 불가능 그래도 보안관점 좋음
+     *  1 은 구현 난이도 쉬움 대신 stateless 가능 보안관점 안좋음 (우리는 시간이 많지 않고 토큰 유실은 어차피 클라이언트 잘못이라 1번으로 채택했었음)
+     */
 
 }

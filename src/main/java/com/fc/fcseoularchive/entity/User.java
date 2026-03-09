@@ -25,10 +25,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Role role = Role.USER;
-
     @Column(name = "user_id", nullable = false, length = 50)
     private String userId;
 
@@ -38,6 +34,10 @@ public class User {
     @Column(nullable = false, length = 30)
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.USER;
+
     @Column(nullable = false)
     private Integer points = 0;
 
@@ -45,7 +45,7 @@ public class User {
     private String profileImage;
 
     @Column(name = "season_ticket")
-    private LocalDateTime seasonTicket;
+    private Integer seasonTicket;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
@@ -60,18 +60,16 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String userId, String password, String nickname, Role role,
-                Integer points, String profileImage, LocalDateTime seasonTicket,
-                LocalDateTime lastLogin, LocalDateTime deletedAt) {
+    public User(String userId, String password, String nickname) {
         this.userId = userId;
         this.password = password;
         this.nickname = nickname;
-        this.role = (role != null) ? role : Role.USER;
-        this.points = (points != null) ? points : 0;
-        this.profileImage = profileImage;
-        this.seasonTicket = seasonTicket;
-        this.lastLogin = lastLogin;
-        this.deletedAt = deletedAt;
+        this.role = Role.USER;
+        this.points = 0;
+        this.profileImage = null;
+        this.seasonTicket = null;
+        this.lastLogin = null;
+        this.deletedAt = null;
     }
 
     @PrePersist
@@ -115,17 +113,6 @@ public class User {
 
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
-    }
-
-
-    // 개발용
-    public User(String userId, String password, String nickname) {
-        this.userId = userId;
-        this.password = password;
-        this.nickname = nickname;
-        this.role = Role.USER;
-        this.points = 0;
-        this.profileImage = null;
     }
 
 }
