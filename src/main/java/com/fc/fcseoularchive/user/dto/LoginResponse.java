@@ -25,7 +25,7 @@ public class LoginResponse {
 
     private Integer points;
 
-    private LocalDateTime seasonTicket;
+    private Integer seasonTicket;
 
     public LoginResponse(JwtToken jwtToken, User user) {
         this.grantType = jwtToken.getGrantType();
@@ -36,6 +36,6 @@ public class LoginResponse {
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonTicket = LocalDateTime.now();
+        this.seasonTicket = LocalDateTime.now().getYear();
     }
 }

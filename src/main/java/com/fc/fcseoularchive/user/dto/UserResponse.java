@@ -1,5 +1,6 @@
 package com.fc.fcseoularchive.user.dto;
 
+import com.fc.fcseoularchive.domain.entity.Seasonauth;
 import com.fc.fcseoularchive.domain.entity.User;
 import com.fc.fcseoularchive.domain.enums.Role;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class UserResponse {
 
     private Integer points;
 
-    private LocalDateTime seasonTicket;
+    private Integer seasonTicket;
 
 
     public UserResponse(User user) {
@@ -28,7 +29,15 @@ public class UserResponse {
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonTicket = LocalDateTime.now();
+        this.seasonTicket = LocalDateTime.now().getYear();
     }
 
+    public UserResponse(Seasonauth seasonauth) {
+        this.id = seasonauth.getUser().getId();
+        this.userId = seasonauth.getUser().getUserId();
+        this.nickname = seasonauth.getUser().getNickname();
+        this.role = seasonauth.getUser().getRole();
+        this.points = seasonauth.getUser().getPoints();
+        this.seasonTicket = seasonauth.getCreatedAt().getYear();
+    }
 }

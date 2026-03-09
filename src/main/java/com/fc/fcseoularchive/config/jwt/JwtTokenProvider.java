@@ -106,6 +106,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // JWT 토큰 복호화
         Claims claims = parseClaims(accessToken);
+
         if (claims.get("role") == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED,"401","UNAUTHORIZED","권한 정보가 없는 토큰입니다.");
         }
@@ -121,7 +122,6 @@ public class JwtTokenProvider {
         UserDetails principal = new User(claims.getSubject(), "", authorities); // 파라미터: 사용자 식별자, credentials, 권한 목록
         return new UsernamePasswordAuthenticationToken(principal, null, authorities);
 
-
     }
 
     // JWT 토큰 복호화
@@ -132,6 +132,8 @@ public class JwtTokenProvider {
                     .build()
                     .parseSignedClaims(accessToken)
                     .getPayload();
+
+
 
         } catch (ExpiredJwtException e) {
             return e.getClaims();

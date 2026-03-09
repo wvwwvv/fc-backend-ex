@@ -1,6 +1,6 @@
 package com.fc.fcseoularchive.domain.entity;
 
-import com.fc.fcseoularchive.domain.enums.SeasonStauts;
+import com.fc.fcseoularchive.domain.enums.SeasonStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Seasonauth {
     private String image;
 
     @Enumerated(EnumType.STRING)
-    private SeasonStauts seasonStauts;
+    private SeasonStatus seasonStatus;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
@@ -37,8 +37,22 @@ public class Seasonauth {
     public Seasonauth(User user, String image) {
         this.user = user;
         this.image = image;
-        this.seasonStauts = SeasonStauts.PENDING;
+        this.seasonStatus = SeasonStatus.PENDING;
         this.updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void approve(){
+        this.seasonStatus = SeasonStatus.APPROVED;
+    }
+
+    public void reject(){
+        this.seasonStatus = SeasonStatus.REJECTED;
+    }
+
+
+    @PrePersist
+    protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
 

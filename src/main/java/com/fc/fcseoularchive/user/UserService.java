@@ -3,12 +3,10 @@ package com.fc.fcseoularchive.user;
 
 import com.fc.fcseoularchive.config.jwt.JwtToken;
 import com.fc.fcseoularchive.config.jwt.JwtTokenProvider;
+import com.fc.fcseoularchive.domain.entity.Seasonauth;
 import com.fc.fcseoularchive.domain.entity.User;
 import com.fc.fcseoularchive.error.ApiException;
-import com.fc.fcseoularchive.user.dto.LoginRequest;
-import com.fc.fcseoularchive.user.dto.LoginResponse;
-import com.fc.fcseoularchive.user.dto.RefreshReqeust;
-import com.fc.fcseoularchive.user.dto.UserCreateRequest;
+import com.fc.fcseoularchive.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -58,8 +56,9 @@ public class UserService {
 
     //  userId 로 회원 조회
     public User getUserId(String userId) {
-        return userRepository.findByUserId(userId)
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 회원입니다."));
+        return null;
     }
 
     // 닉네임으로 회원 조회
@@ -129,8 +128,14 @@ public class UserService {
      * 관리자용 AP
      */
     // 관리자용 전체 회원 조회
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponse> getAll() {
+        List<Seasonauth> userAll = userRepository.getUserAll();
+
+        return userAll.stream()
+                .map( seasonauth -> new UserResponse(seasonauth))
+                .toList();
+
+
     }
 
 

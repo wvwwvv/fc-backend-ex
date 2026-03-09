@@ -78,7 +78,7 @@ public class SecurityConfig {
                                 /** 관리자만 가능한 곳! */
 //                                .requestMatchers(
 //                                        "/api/admin/**",
-                        //                "/api/**/admin/**"
+//                                        "/api/**/admin/**"
 //                                ).hasRole("ADMIN")
 
                                 /** 위에 없으면 로그인된 회원만 가능! */

@@ -81,7 +81,7 @@ public class jwtTest {
             .withExposedPorts(6379);
 
     @DynamicPropertySource
-    static void redisPropertie(DynamicPropertyRegistry registry) {
+    static void redisProperty(DynamicPropertyRegistry registry) {
         registry.add("spring.redis.host", redisContainer::getHost);
         registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379));
     }
