@@ -45,7 +45,7 @@ public class User {
     private String profileImage;
 
     @Column(name = "season_ticket")
-    private Integer seasonTicket;
+    private LocalDateTime seasonTicket;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;

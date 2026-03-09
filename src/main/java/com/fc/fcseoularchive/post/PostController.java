@@ -3,6 +3,8 @@ package com.fc.fcseoularchive.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,17 +23,12 @@ public class PostController {
     // 직관 기록 작성
     @PostMapping
     public ResponseEntity<Void> createPost(
-            @RequestHeader("Dev-Authorization") String token, // Authorization 으로 사용시 Swagger 에서 인식 못함. 임시로 Dev- 앞에 붙임
-            @RequestBody PostCreateRequest request
+            @RequestBody PostCreateRequest request // 임시로 userId 필드 추가
     ) {
-        String userIdByString = token
-                .replace("Bearer", "")
-                .replace(":", "")
-                .trim();
 
         try {
-            Long id = Long.parseLong(userIdByString);
-            postService.createPost(id, request);
+            //Long id = Long.parseLong(userIdByString);
+            postService.createPost(request.getUserId(), request);
         } catch (NumberFormatException e) {
             // id 가 숫자가 아닌 예외 처리
             return ResponseEntity.badRequest().build();

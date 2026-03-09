@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class PostCreateRequest {
     private Long gameId;
+    private Long userId;
     private String title;
     private String content;
     private String ticketImage; // 일반 유저는 필수, 시즌권 유저는 null 가능

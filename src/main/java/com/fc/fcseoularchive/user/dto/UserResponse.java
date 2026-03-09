@@ -4,6 +4,9 @@ import com.fc.fcseoularchive.entity.Role;
 import com.fc.fcseoularchive.entity.User;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 public class UserResponse {
 
@@ -17,7 +20,7 @@ public class UserResponse {
 
     private Integer points;
 
-    private Integer seasonTicket;
+    private LocalDateTime seasonTicket;
 
 
     public UserResponse(User user) {
@@ -26,7 +29,7 @@ public class UserResponse {
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonTicket = user.getSeasonTicket();
+        this.seasonTicket = LocalDateTime.now();
     }
 
 }
