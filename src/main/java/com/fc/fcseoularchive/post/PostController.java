@@ -1,10 +1,13 @@
 package com.fc.fcseoularchive.post;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "3. PostController", description = "직관 기록 API")
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class PostController {
     */
 
     // 직관 기록 작성
+    @Operation(summary = "직관 기록 작성")
     @PostMapping
     public ResponseEntity<Void> createPost(
             @RequestBody PostCreateRequest request

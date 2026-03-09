@@ -26,11 +26,6 @@ public class PostService {
 
     // PostCreateRequest 에
     public void createPost(Long id, PostCreateRequest request) { // Long 타입의 id 사용 주의
-        // id null 체크
-        if (id == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "사용자 ID가 필요합니다.");
-        }
-
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "유저를 찾을 수 없습니다."));
 

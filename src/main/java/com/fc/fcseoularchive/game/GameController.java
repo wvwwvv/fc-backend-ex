@@ -1,5 +1,6 @@
 package com.fc.fcseoularchive.game;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -18,6 +19,7 @@ public class GameController {
 
     private final GameService gameService;
 
+    @Operation(summary = "경기 전체 일정 조회")
     @GetMapping
     public ResponseEntity<List<GameResponse>> getGames() {
         List<GameResponse> response = gameService.getAllGames();
