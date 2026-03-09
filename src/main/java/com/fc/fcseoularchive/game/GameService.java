@@ -43,10 +43,6 @@ public class GameService {
             // 경기 결과가 null 이 아니면 String 으로 변환 해서 반환
             response.setResult(game.getResult() != null ? game.getResult().toString() : null);
 
-            /* todo db(image db? 아니면 로고 db 새로 생성?) 에서 FC Seoul 과 opponent 등 필요한 이미지 불러 오는 작업 필요
-            */
-            response.setImages(new ArrayList<>()); // 일단 빈 리스트 처리
-
             return response;
         }).collect(Collectors.toList());
     }
