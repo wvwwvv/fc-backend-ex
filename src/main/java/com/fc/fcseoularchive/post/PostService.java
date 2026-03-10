@@ -72,6 +72,12 @@ public class PostService {
 
     }
 
+   /* @Transactional(readOnly = true)
+    public List<PostResponse> getPosts() {
+        return postAuthRepository.f
+    }*/
+
+
     // admin : 모든 인증 게시글 조회
     @Transactional(readOnly = true)
     public List<PostAdminResponse> getAllPosts() {

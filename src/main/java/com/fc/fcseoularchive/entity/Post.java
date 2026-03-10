@@ -33,7 +33,6 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
