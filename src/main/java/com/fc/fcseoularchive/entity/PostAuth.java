@@ -27,6 +27,9 @@ public class PostAuth {
     @Column(nullable = false)
     private PostStatus status = PostStatus.PENDING;
 
+
+
+
     @Builder
     public PostAuth(Post post, String ticketImage, PostStatus status) {
         this.post = post;
@@ -34,7 +37,6 @@ public class PostAuth {
         this.status = status;
 
     }
-
 
 
     public void approve() {

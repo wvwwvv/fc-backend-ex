@@ -72,7 +72,16 @@ public class PostService {
 
     }
 
-    // 직관 인증 게시글 조회
+    // admin : 모든 인증 게시글 조회
+    @Transactional(readOnly = true)
+    public List<PostAdminResponse> getAllPosts() {
+        return postAuthRepository.findAll()
+                .stream()
+                .map(PostAdminResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    // admin : status 필터링 직관 인증 게시글 조회
     @Transactional(readOnly = true)
     public List<PostAdminResponse> getPostsByStatus(PostStatus status) {
         return postAuthRepository.findAllByStatus(status)
@@ -81,26 +90,24 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    // 직관 인증 게시글 승인
-    @Transactional
-    public void ApprovePost(Long postAuthId) {
+
+    // admin : 직관 인증 게시글 승인
+    public void approvePost(Long postAuthId) {
         PostAuth postAuth = postAuthRepository.findById(postAuthId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
 
         postAuth.approve();
     }
 
-    // 직관 인증 게시글 거절
-    @Transactional
-    public void RejectPost(Long postAuthId) {
+    // admin : 직관 인증 게시글 거절
+    public void rejectPost(Long postAuthId) {
         PostAuth postAuth = postAuthRepository.findById(postAuthId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
 
         postAuth.reject();
     }
 
-    // 직관 인증 게시글 PENDING 으로
-    @Transactional
+    // admin : 직관 인증 게시글 PENDING 으로
     public void resetPostToPending(Long postAuthId) {
         PostAuth postAuth = postAuthRepository.findById(postAuthId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
@@ -108,7 +115,7 @@ public class PostService {
         postAuth.resetToPending();
     }
 
-    @Transactional
+    // admin : 직관 인증 게시글 DRAFT 으로
     public void resetPostToDraft(Long postAuthId) {
         PostAuth postAuth = postAuthRepository.findById(postAuthId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
@@ -117,4 +124,13 @@ public class PostService {
     }
 
 
+    // admin : 직관 인증 게시글 PENDING 인 것만 전부 APPROVE
+    public void approveAll() {
+        List<Long> pendingPostIds = postAuthRepository.findAllByStatus(PostStatus.PENDING)
+                .stream()
+                .map(postAuth -> postAuth.getPost().getId())
+                .toList();
+
+        pendingPostIds.forEach(postId -> approvePost(postId));
+    }
 }

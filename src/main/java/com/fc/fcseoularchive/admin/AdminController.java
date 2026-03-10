@@ -45,6 +45,13 @@ public class AdminController {
     }
 
 
+    // 모든 status 에 대해 param 으로 조회
+    @Operation(summary = "모든 직관 인증 게시글 조회")
+    @GetMapping("/verifications/posts/all")
+    public ResponseEntity<List<PostAdminResponse>> getAllPosts() {
+        List<PostAdminResponse> response = postService.getAllPosts();
+        return ResponseEntity.ok(response);
+    }
 
 
     // 모든 status 에 대해 param 으로 조회
@@ -64,7 +71,7 @@ public class AdminController {
     public ResponseEntity<Void> approvePost(
             @PathVariable Long postAuthId
     ) {
-        postService.ApprovePost(postAuthId);
+        postService.approvePost(postAuthId);
         return ResponseEntity.ok().build();
     }
 
@@ -74,7 +81,7 @@ public class AdminController {
     public ResponseEntity<Void> rejectPost(
             @PathVariable Long postAuthId
     ) {
-        postService.RejectPost(postAuthId);
+        postService.rejectPost(postAuthId);
         return ResponseEntity.noContent().build();
     }
 
@@ -98,15 +105,27 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    // 경기 정보 추가
+    // PENDING 게시물 전부 APPROVE 로 수락
+    @Operation(summary = "PENDING 인 모든 게시글 APPROVED 로 변경")
+    @PostMapping("/verifications/posts/all/approve")
+    public ResponseEntity<Void> approveAll() {
+        postService.approveAll();
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
+
+    // 경기 정보 추가 201
     @Operation(summary = "경기 정보 추가")
     @PostMapping("/game")
     public ResponseEntity<Void> addGame(@RequestBody GameAdminRequest request) {
         gameService.addGame(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 경기 정보 가져 오기
+    // 경기 정보 가져 오기 200
     @Operation(summary = "경기 정보 검색")
     @GetMapping("/game/{gameId}")
     public ResponseEntity<Game> getGame (@PathVariable Long gameId) {
@@ -114,7 +133,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
-    // 경기 정보 수정 하기
+    // 경기 정보 수정 하기 200 (리소스 생성이 아닌, 기존 리소스를 수정하므로)
     @Operation(summary = "경기 정보 수정")
     @PutMapping("/game/{gameId}")
     public ResponseEntity<Game> updateGame (
@@ -126,7 +145,7 @@ public class AdminController {
 
     }
 
-    // 경기 정보 삭제 하기
+    // 경기 정보 삭제 하기 204
     @Operation(summary = "경기 정보 삭제")
     @DeleteMapping("/game/{gameId}")
     public ResponseEntity<Void> deleteGame (@PathVariable Long gameId) {
