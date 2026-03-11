@@ -44,6 +44,7 @@ public class User {
     @Column(name = "profile_image", length = 512)
     private String profileImage;
 
+    // 지우고 season_auth 에 넣을 예정
     @Column(name = "season_ticket")
     private LocalDateTime seasonTicket;
 

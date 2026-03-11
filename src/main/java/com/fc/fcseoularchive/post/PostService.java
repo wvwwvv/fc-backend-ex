@@ -22,10 +22,10 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final PostAuthRepository postAuthRepository;
 
-    // token 적용 전 개발 단계에서는 Bearer: 1 같이 id 만 임시로 담은 토큰 받아서 controller 에서 추출 후 메서드 호출하는 방식으로 구현
-    // todo token 적용 후에도 userId 를 추출하고, parameter 에 userId 넣는 방식으로 개발 하나요?
-    public void createPost(Long id, PostCreateRequest request) { // userId 사용할 거면 String 타입
+    // PostCreateRequest 에
+    public void createPost(Long id, PostCreateRequest request) { // Long 타입의 id 사용 주의
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "유저를 찾을 수 없습니다."));
 
@@ -43,12 +43,11 @@ public class PostService {
                 .game(game)
                 .title(request.getTitle())
                 .content(request.getContent())
-                .ticketImage(request.getTicketImage())
-                .status(status)
                 .build();
 
         postRepository.save(post);
 
+        // Image 저장
         // Post 테이블에 저장되는 이미지는 ticketImage가 유일
         // 이미지들은 따로 Image 테이블에 저장
         // 프론트의 request 에 image 필드가 있고, 비어있지 않을 때
@@ -61,47 +60,83 @@ public class PostService {
             ).toList();
             imageRepository.saveAll(images);
         }
+
+        // PostAuth 저장
+        PostAuth postAuth = PostAuth.builder()
+                .post(post)
+                .ticketImage(request.getTicketImage())
+                .status(status)
+                .build();
+
+        postAuthRepository.save(postAuth);
+
     }
 
-    // 직관 인증 게시글 조회
+   /* @Transactional(readOnly = true)
+    public List<PostResponse> getPosts() {
+        return postAuthRepository.f
+    }*/
+
+
+    // admin : 모든 인증 게시글 조회
     @Transactional(readOnly = true)
-    public List<PostAdminResponse> getPostsByStatus(PostStatus status) {
-        return postRepository.findAllByStatus(status)
+    public List<PostAdminResponse> getAllPosts() {
+        return postAuthRepository.findAll()
                 .stream()
                 .map(PostAdminResponse::from)
                 .collect(Collectors.toList());
     }
 
-    // 직관 인증 게시글 승인
-    @Transactional
-    public void ApprovePost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
-        post.approve();
-    }
-
-    // 직관 인증 게시글 거절
-    @Transactional
-    public void RejectPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
-        post.reject();
-    }
-
-    // 직관 인증 게시글 PENDING 으로
-    @Transactional
-    public void resetPostToPending(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
-        post.resetToPending();
-    }
-
-    @Transactional
-    public void resetPostToDraft(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 게시글입니다."));
-        post.resetToDraft();
+    // admin : status 필터링 직관 인증 게시글 조회
+    @Transactional(readOnly = true)
+    public List<PostAdminResponse> getPostsByStatus(PostStatus status) {
+        return postAuthRepository.findAllByStatus(status)
+                .stream()
+                .map(PostAdminResponse::from)
+                .collect(Collectors.toList());
     }
 
 
+    // admin : 직관 인증 게시글 승인
+    public void approvePost(Long postAuthId) {
+        PostAuth postAuth = postAuthRepository.findById(postAuthId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
+
+        postAuth.approve();
+    }
+
+    // admin : 직관 인증 게시글 거절
+    public void rejectPost(Long postAuthId) {
+        PostAuth postAuth = postAuthRepository.findById(postAuthId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
+
+        postAuth.reject();
+    }
+
+    // admin : 직관 인증 게시글 PENDING 으로
+    public void resetPostToPending(Long postAuthId) {
+        PostAuth postAuth = postAuthRepository.findById(postAuthId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
+
+        postAuth.resetToPending();
+    }
+
+    // admin : 직관 인증 게시글 DRAFT 으로
+    public void resetPostToDraft(Long postAuthId) {
+        PostAuth postAuth = postAuthRepository.findById(postAuthId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "해당 게시글의 인증 정보를 찾을 수 없습니다."));
+
+        postAuth.resetToDraft();
+    }
+
+
+    // admin : 직관 인증 게시글 PENDING 인 것만 전부 APPROVE
+    public void approveAll() {
+        List<Long> pendingPostIds = postAuthRepository.findAllByStatus(PostStatus.PENDING)
+                .stream()
+                .map(postAuth -> postAuth.getPost().getId())
+                .toList();
+
+        pendingPostIds.forEach(postId -> approvePost(postId));
+    }
 }

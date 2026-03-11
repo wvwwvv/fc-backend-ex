@@ -29,7 +29,7 @@ public class UserResponse {
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonTicket = LocalDateTime.now();
+        this.seasonTicket = LocalDateTime.now(); // todo
     }
 
 }

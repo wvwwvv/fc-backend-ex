@@ -1,12 +1,13 @@
 package com.fc.fcseoularchive.game;
 
 import com.fc.fcseoularchive.entity.Game;
-import com.fc.fcseoularchive.entity.GameResult;
+import com.fc.fcseoularchive.error.ApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +44,74 @@ public class GameService {
             // 경기 결과가 null 이 아니면 String 으로 변환 해서 반환
             response.setResult(game.getResult() != null ? game.getResult().toString() : null);
 
-            /* todo db(image db? 아니면 로고 db 새로 생성?) 에서 FC Seoul 과 opponent 등 필요한 이미지 불러 오는 작업 필요
-            */
-            response.setImages(new ArrayList<>()); // 일단 빈 리스트 처리
-
             return response;
         }).collect(Collectors.toList());
     }
+
+    // admin : 경기 추가
+    @Transactional
+    public void addGame(GameAdminRequest request) {
+        Game game = Game.builder()
+                .date(request.getDate())
+                .stadium(request.getStadium())
+                .round(request.getRound())
+                .homeTeam(request.getHomeTeam())
+                .awayTeam(request.getAwayTeam())
+                .homeScore(request.getHomeScore())
+                .awayScore(request.getAwayScore())
+                .result(request.getResult())
+                .deletedAt(request.getDeletedAt())
+                .build();
+
+        // created_at, updated_at 은 onCreated 로 자동 적용
+        gameRepository.save(game);
+    }
+
+    // admin : 경기 정보 1개 가져 오기
+    public Game getGame(Long gameId) {
+        return gameRepository.findById(gameId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
+
+    }
+
+    // admin : 경기 1개 정보 수정 (모든 필드 제어 가능)
+    @Transactional
+    public Game updateGame(Long gameId, GameAdminRequest request) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
+
+        // 모든 필드 업데이트
+        game.adminUpdate(
+                request.getDate(),
+                request.getStadium(),
+                request.getRound(),
+                request.getHomeTeam(),
+                request.getAwayTeam(),
+                request.getHomeScore(),
+                request.getAwayScore(),
+                request.getResult(),
+                request.getDeletedAt()
+        );
+
+        return gameRepository.save(game);
+    }
+
+    // admin : 경기 삭제
+    @Transactional
+    public void deleteGame(Long gameId) {
+        gameRepository.findById(gameId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "경기가 존재하지 않습니다."));
+
+        gameRepository.deleteById(gameId);
+    }
+
+    /*public List<GameResponse> getAllGamesByYear(int year) {
+
+        *//*
+           date 의 YYYY 가 year 와 동일한 game 만 list 에 담기
+        *//*
+
+
+    }*/
 }
+

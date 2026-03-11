@@ -33,16 +33,6 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    // nullable
-    // 시즌권 사용자는 null : 프론트에서 넘겨줄 필요 없음
-    @Column(name = "ticket_image", length = 512)
-    private String ticketImage; // null 이면 시즌권 사용자 의미
-
-    // 초깃값 SUBMITTED
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PostStatus status = PostStatus.PENDING;
-
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
@@ -53,13 +43,11 @@ public class Post {
     private LocalDateTime createdAt;
 
     @Builder
-    public Post(User user, Game game, String title, String content, String ticketImage, PostStatus status) {
+    public Post(User user, Game game, String title, String content) {
         this.user = user;
         this.game = game;
         this.title = title;
         this.content = content;
-        this.ticketImage = ticketImage;
-        this.status = (status != null) ? status : PostStatus.PENDING;
     }
 
     @PrePersist
@@ -74,20 +62,6 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void approve() {
-        this.status = PostStatus.APPROVED;
-    }
 
-    public void reject() {
-        this.status = PostStatus.REJECTED;
-    }
-
-    public void resetToPending() {
-        this.status = PostStatus.PENDING;
-    }
-
-    public void resetToDraft() {
-        this.status = PostStatus.DRAFT;
-    }
 
 }
