@@ -28,6 +28,14 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "경기 전체 일정 조회 - 로그인 전")
+    @GetMapping("/guest")
+    public ResponseEntity<List<GameResponse>> getGamesForGuest() {
+        List<GameResponse> response = gameService.getAllGamesForGuest();
+
+        return ResponseEntity.ok(response);
+    }
+
 
     /*@Operation(summary = "특정 년도의 경기 조회")
     @GetMapping("/{year}")
