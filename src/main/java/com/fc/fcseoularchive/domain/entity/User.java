@@ -31,9 +31,6 @@ public class User {
     @Column(nullable = false, length = 30, unique = true)
     private String nickname;
 
-    @OneToOne(mappedBy = "user")
-    private Seasonauth seasonauth;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role = Role.USER;
@@ -62,7 +59,6 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.role = Role.USER;
-        this.seasonauth = null;
         this.points = 0;
         this.profileImage = null;
         this.lastLogin = null;

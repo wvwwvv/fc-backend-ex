@@ -3,9 +3,7 @@ package com.fc.fcseoularchive.user;
 
 import com.fc.fcseoularchive.config.jwt.JwtToken;
 import com.fc.fcseoularchive.config.jwt.JwtTokenProvider;
-import com.fc.fcseoularchive.domain.entity.Seasonauth;
 import com.fc.fcseoularchive.domain.entity.User;
-import com.fc.fcseoularchive.domain.enums.SeasonStatus;
 import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -49,6 +48,7 @@ public class UserService {
     }
 
     /** 로그인 */
+    @Transactional
     public LoginResponse login(LoginRequest req) {
         User user = userRepository.getUser(req.getUserId())
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "401", "UNAUTHORIZED", "존재하지 않은 아이디입니다."));
@@ -58,8 +58,6 @@ public class UserService {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "401", "UNAUTHORIZED", "비밀번호를 다시 입력해주세요.");
         }
 
-        // 티켓 확인
-        Integer seasonTicket = validateUser(user);
 
         // 인증서 생성 타입은 Authentication
         // principal, credntials, authent~~list
@@ -71,7 +69,12 @@ public class UserService {
 
         // 토큰 생성 ( grantType, accessToken, RefreshToken )
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-        return new LoginResponse(jwtToken, user, seasonTicket);
+
+        // last login 갱신
+        LocalDateTime now = LocalDateTime.now();
+        user.updateLastLogin(now);
+
+        return new LoginResponse(jwtToken, user);
     }
 
     /** 토큰 재발급 (리프레시) */
@@ -101,37 +104,19 @@ public class UserService {
                 List.of(new SimpleGrantedAuthority(user.getRole().toString()))
         );
 
-        // 티켓 확인
-        Integer seasonTicket = validateUser(user);
-
         // 토큰 재발급
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        return new LoginResponse(jwtToken, user, seasonTicket);
+        return new LoginResponse(jwtToken, user);
     }
 
     /** Id로 회원 정보 조회 */
     public UserResponse getUser(Long id) {
-        User user = userRepository.selectById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 회원입니다."));
-        Integer seasonTicket = validateUser(user);
-        return new UserResponse(user, seasonTicket);
+        return new UserResponse(user);
     }
 
-    /**
-     * User 에서 시즌티켓 있는지 검증, 인증 된 경우만 해당 년도 가져옴
-     * 없거나, 인증 안되었으면 다 null
-     */
-    public Integer validateUser(User user) {
-        Integer seasonTicket = null;
-        Seasonauth seasonauth = user.getSeasonauth();
-        if (seasonauth != null) {
-            if (seasonauth.getSeasonStatus() == SeasonStatus.APPROVED) {
-                seasonTicket = seasonauth.getCreatedAt().getYear();
-            }
-        }
-        return seasonTicket;
-    }
 
 
     /**
@@ -140,12 +125,10 @@ public class UserService {
     // 관리자용 전체 회원 조회
     public List<UserResponse> getAll() {
         return userRepository.getUserAll().stream()
-                .map(user -> {
-                    Integer seasonTicket = validateUser(user);
-                    return new UserResponse(user, seasonTicket);
-                })
+                .map(UserResponse::new)
                 .toList();
     }
+
 
     /** 쓸모없을 것 같음 */
 //    //  userId 로 회원 조회

@@ -1,13 +1,10 @@
 package com.fc.fcseoularchive.admin;
 
 import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.domain.enums.PostStatus;
 import com.fc.fcseoularchive.game.GameAdminRequest;
 import com.fc.fcseoularchive.game.GameService;
 import com.fc.fcseoularchive.post.PostAdminResponse;
 import com.fc.fcseoularchive.post.PostService;
-import com.fc.fcseoularchive.season_auth.SeasonauthService;
-import com.fc.fcseoularchive.season_auth.dto.SeasonResponse;
 import com.fc.fcseoularchive.user.dto.UserResponse;
 import com.fc.fcseoularchive.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +24,6 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-    private final SeasonauthService seasonauthService;
     private final PostService postService;
     private final GameService gameService;
     private final RequestService requestBuilder;
@@ -38,7 +34,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
-    @Operation(summary = "시즌권 전체 수락 (PENDING->APPROVED)")
+    /*@Operation(summary = "시즌권 전체 수락 (PENDING->APPROVED)")
     @PostMapping("/season-auth/approveAll")
     public ResponseEntity<Void> seasonApproveAll(){
         seasonauthService.approveAll();
@@ -66,7 +62,7 @@ public class AdminController {
     public ResponseEntity<Void> seasonReject(@PathVariable Long seasonAuthId){
         seasonauthService.rejected(seasonAuthId);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
+    }*/
 
 
     // 모든 status 에 대해 param 으로 조회
@@ -78,7 +74,7 @@ public class AdminController {
     }
 
 
-    // 모든 status 에 대해 param 으로 조회
+    /*// 모든 status 에 대해 param 으로 조회
     @Operation(summary = "status로 직관 인증 게시글 조회")
     @GetMapping("/verifications/posts")
     public ResponseEntity<List<PostAdminResponse>> getPostsByStatus(
@@ -86,10 +82,10 @@ public class AdminController {
     ) {
         List<PostAdminResponse> response = postService.getPostsByStatus(status);
         return ResponseEntity.ok(response);
-    }
+    }*/
 
 
-    // 직관 인증 수락 - 200 ok
+    /*// 직관 인증 수락 - 200 ok
     @Operation(summary = "게시글 status APPROVED 로 변경")
     @PostMapping("/verifications/posts/{postAuthId}/approve")
     public ResponseEntity<Void> approvePost(
@@ -135,7 +131,7 @@ public class AdminController {
     public ResponseEntity<Void> postApproveAll() {
         postService.approveAll();
         return ResponseEntity.ok().build();
-    }
+    }*/
 
 
 

@@ -17,16 +17,13 @@ public class UserResponse {
 
     private final Integer points;
 
-    private final Integer seasonAuth;
 
-
-    public UserResponse(User user, Integer seasonAuth) {
+    public UserResponse(User user) {
         this.id = user.getId();
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonAuth = seasonAuth;
     }
 
 

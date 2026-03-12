@@ -1,8 +1,7 @@
 package com.fc.fcseoularchive.post;
 
 
-import com.fc.fcseoularchive.domain.entity.PostAuth;
-import com.fc.fcseoularchive.domain.enums.PostStatus;
+import com.fc.fcseoularchive.domain.entity.Post;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,24 +11,20 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PostAdminResponse {
-    private Long postAuthId;
+    private Long postId;
     private String nickname;
     private Long gameId;
     private LocalDateTime date;
-    private String ticketImage;
-    private PostStatus status;
     private LocalDateTime createdAt;
 
-    public static PostAdminResponse from(PostAuth postAuth) {
+    public static PostAdminResponse from(Post post) {
         PostAdminResponse response = new PostAdminResponse();
 
-        response.setPostAuthId(postAuth.getId());
-        response.setNickname(postAuth.getPost().getUser().getNickname());
-        response.setGameId(postAuth.getPost().getGame().getId());
-        response.setDate(postAuth.getPost().getGame().getDate());
-        response.setTicketImage(postAuth.getTicketImage());
-        response.setStatus(postAuth.getStatus());
-        response.setCreatedAt(postAuth.getPost().getCreatedAt());
+        response.setPostId(post.getId());
+        response.setNickname(post.getUser().getNickname());
+        response.setGameId(post.getGame().getId());
+        response.setDate(post.getGame().getDate());
+        response.setCreatedAt(post.getCreatedAt());
         return response;
     }
 }
