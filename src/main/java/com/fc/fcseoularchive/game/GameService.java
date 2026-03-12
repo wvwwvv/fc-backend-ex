@@ -1,7 +1,7 @@
 package com.fc.fcseoularchive.game;
 import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.domain.enums.GameResult;
+import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final PostRepository postRepository;
 
     // 최신 경기 순으로 모든 경기 일정 정보 반환
     public List<GameResponse> getAllGames() {
@@ -41,8 +41,10 @@ public class GameService {
             response.setHomeScore(game.getHomeScore());
             response.setAwayScore(game.getAwayScore());
 
-            // todo "isAttended" : true - 로그인 user 가 간 경기인지, PostAuth 제거하고 구현
-            response.setIsAttended(false);
+            // "isAttended" : true - 로그인 user 가 간 경기인지
+            // post db 의 game_id == game.getId 인 행에서 user_id == loginId 인지 판단
+            boolean existPost = postRepository.existsByUserIdAndGameId(loginId, game.getId());
+            response.setIsAttended(existPost);
 
             // 상대팀 찾기 : 홈팀이 "FC Seoul" 이 아니면 awayTeam 이 opponent
             String opponent = game.getHomeTeam().equals("FC Seoul") ? game.getAwayTeam() : game.getHomeTeam();
