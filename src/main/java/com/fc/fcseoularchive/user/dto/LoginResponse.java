@@ -6,7 +6,6 @@ import com.fc.fcseoularchive.domain.entity.User;
 import com.fc.fcseoularchive.domain.enums.Role;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
 @Getter
 public class LoginResponse {
@@ -25,9 +24,7 @@ public class LoginResponse {
 
     private final Integer points;
 
-    private final Integer seasonAuth;
-
-    public LoginResponse(JwtToken jwtToken, User user, Integer seasonAuth) {
+    public LoginResponse(JwtToken jwtToken, User user) {
         this.grantType = jwtToken.getGrantType();
         this.accessToken = jwtToken.getAccessToken();
         this.refreshToken = jwtToken.getRefreshToken();
@@ -36,6 +33,5 @@ public class LoginResponse {
         this.nickname = user.getNickname();
         this.role = user.getRole();
         this.points = user.getPoints();
-        this.seasonAuth = seasonAuth;
     }
 }

@@ -26,4 +26,6 @@ public class GameResponse {
 
     private String status; // SCHEDULED (경기전) | FINISHED (경기후)
     private String result; // W, D, L
+
+    private Boolean isAttended; // 직관 기록 작성한 경기 인지
 }

@@ -1,8 +1,7 @@
 package com.fc.fcseoularchive.post;
 
 
-import com.fc.fcseoularchive.domain.entity.PostAuth;
-import com.fc.fcseoularchive.domain.enums.PostStatus;
+import com.fc.fcseoularchive.domain.entity.Post;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,25 +15,21 @@ public class PostResponse {
     private String title; // 게시글 제목
     private String content;
     private LocalDateTime gameDate;
-    private PostStatus status;
     private String thumbnail;
     private LocalDateTime createdAt;
 
-    public static PostResponse from(PostAuth postAuth) {
+    public static PostResponse from(Post post) {
         PostResponse response = new PostResponse();
 
-        // Image db의 game_id == gameId 를 만족하는 첫 데이터의 image를 thumbnail로
-        Long gameId = postAuth.getPost().getGame().getId();
+        // todo thumbnail
 
-
-        response.setPostId(postAuth.getPost().getId());
-        response.setGameId(postAuth.getPost().getGame().getId());
-        response.setTitle(postAuth.getPost().getTitle());
-        response.setContent(postAuth.getPost().getContent());
-        response.setGameDate(postAuth.getPost().getGame().getDate());
-        response.setStatus(postAuth.getStatus());
+        response.setPostId(post.getId());
+        response.setGameId(post.getGame().getId());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+        response.setGameDate(post.getGame().getDate());
         //response.setThumbnail();
-        response.setCreatedAt(postAuth.getPost().getCreatedAt());
+        response.setCreatedAt(post.getCreatedAt());
         return response;
     }
 }

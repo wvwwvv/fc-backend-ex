@@ -1,7 +1,6 @@
 package com.fc.fcseoularchive.user;
 
 
-import com.fc.fcseoularchive.domain.entity.User;
 import com.fc.fcseoularchive.user.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
