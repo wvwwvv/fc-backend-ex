@@ -3,6 +3,12 @@ package com.fc.fcseoularchive.image;
 import com.fc.fcseoularchive.domain.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ImageRepository extends JpaRepository<Image, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface ImageRepository extends JpaRepository<Image, Long> {
+    List<Image> findByGame_IdAndUser_Id(Long gameId, Long userId);
+
+    // 게임 id 와 유저 id로 찾되, image 의 pk 가 가장 작은 것 반환 - 없을 수도 있다
+    Optional<Image> findFirstByGame_IdAndUser_IdOrderByIdAsc(Long gameId, Long userId);
 }
