@@ -87,10 +87,9 @@ public class SecurityConfig {
 
 
                                 /** 관리자만 가능한 곳! */
-//                                .requestMatchers(
-//                                        "/api/admin/**",
-//                                        "/api/**/admin/**"
-//                                ).hasRole("ADMIN")
+                                .requestMatchers(
+                                        "/api/admin/**"
+                                ).hasRole("ADMIN")
 
                                 /** 위에 없으면 로그인된 회원만 가능! */
                                 .anyRequest().authenticated()
@@ -103,7 +102,7 @@ public class SecurityConfig {
 
         /** OAuth2 리소스 서버 설정 및 토큰에서 ROLE 꺼내오기 */
         httpSecurity
-                .oauth2ResourceServer(oaut2 -> oaut2
+                .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 
 
@@ -111,13 +110,6 @@ public class SecurityConfig {
 
     }
 
-    /** ?? */
-    @Bean
-    public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter(){
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
-        return converter;
-    }
 
     /** CORS 설정 */
     @Bean
@@ -134,6 +126,14 @@ public class SecurityConfig {
         return source;
     }
 
+    /** Keycloak의 Jwt 의 권한을 꺼내서 Authentication 에 올려주기 */
+    @Bean
+    public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter(){
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
+        return converter;
+    }
+
     /** 클레임에서 권한을 꺼내서 시큐리티 컨텍스트에 권한 등록 */
     static class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>>{
         @Override
@@ -141,12 +141,12 @@ public class SecurityConfig {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
             Map<String, Object> realmAccess = jwt.getClaim("realm_access");
 
-            // 릴름에서 access 가 없다면 빈 권한으로 반환
-            if(realmAccess != null){
+            // 랠름에서 access 가 없다면 빈 권한으로 반환
+            if(realmAccess == null){
                 return authorities;
             }
 
-            // 릴름_Access에서 roles: 꺼내기
+            // 랠름_Access에서 roles: 꺼내기
             Object rolesObj = realmAccess.get("roles");
             if(!(rolesObj instanceof List<?> roles)){
                 // roles에 아무것도 없다면 빈 배열 반환
