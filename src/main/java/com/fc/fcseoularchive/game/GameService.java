@@ -1,4 +1,5 @@
 package com.fc.fcseoularchive.game;
+
 import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.domain.entity.Game;
 import com.fc.fcseoularchive.post.PostRepository;
@@ -22,7 +23,7 @@ public class GameService {
     private final PostRepository postRepository;
 
     // 경기 조회 (년, 월 필터링)
-    public List<GameResponse> getAllGames(Integer year, Integer month) {
+    public List<GameResponse> getAllGames(Long loginId, Integer year, Integer month) {
         List<Game> games;
         if (year != null && month != null) {
             games = gameRepository.findByYearOrderByDateAsc(year, month);
@@ -32,9 +33,9 @@ public class GameService {
             throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "year 와 month 값이 필요합니다.");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userIdByString = authentication.getName();
-        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userIdByString = authentication.getName();
+//        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
 
         return games.stream().map(game -> {
             GameResponse response = new GameResponse();
@@ -107,7 +108,7 @@ public class GameService {
         Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
 
         Game game = gameRepository.findById(gameId)
-                    .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
 
         GameResponse response = new GameResponse();
 
@@ -132,7 +133,6 @@ public class GameService {
 
         return response;
     }
-
 
 
     // admin : 경기 추가

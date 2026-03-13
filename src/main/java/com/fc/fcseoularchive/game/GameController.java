@@ -1,11 +1,13 @@
 package com.fc.fcseoularchive.game;
 
 import com.fc.fcseoularchive.domain.entity.Game;
+import org.springframework.security.oauth2.jwt.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +23,18 @@ public class GameController {
     @Operation(summary = "경기 전체 일정 조회")
     @GetMapping("/all")
     public ResponseEntity<List<GameResponse>> getGames() {
-        List<GameResponse> response = gameService.getAllGames(null, null);
+        List<GameResponse> response = gameService.getAllGames(null,null, null);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "경기 전체 일정 조회 (년, 월 필터링)")
     @GetMapping
-    public ResponseEntity<List<GameResponse>> getGames(
-            @RequestParam Integer year,
-            @RequestParam Integer month
-    ) {
-        List<GameResponse> response = gameService.getAllGames(year, month);
+    public ResponseEntity<List<GameResponse>> getGames(Authentication authentication, @RequestParam Integer year, @RequestParam Integer month) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long loginId = Long.parseLong(jwt.getClaim("id"));
+
+        List<GameResponse> response = gameService.getAllGames(loginId,year, month);
         return ResponseEntity.ok(response);
     }
 

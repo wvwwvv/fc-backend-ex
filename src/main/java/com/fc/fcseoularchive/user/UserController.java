@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "1. UserController")
@@ -25,9 +27,13 @@ public class UserController {
     }
 
     @Operation(summary = "id로 유저 1명 조회")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(id));
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getUser(Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long loginId = Long.parseLong(jwt.getClaim("id"));
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(loginId));
     }
 
     @Operation(summary = "로그인")

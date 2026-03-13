@@ -27,8 +27,10 @@ public class TestController {
     @GetMapping("/token")
     public ResponseEntity<TestDto> test(Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
-
         String id = jwt.getClaim("id");
+
+
+//        String newId = jwt.getId();
 
         String username = jwt.getClaimAsString("nickname"); // 유저 네임 꺼내는 방법
 
@@ -70,6 +72,9 @@ public class TestController {
 
 
     }
+
+
+
 
     // 1. 테스트용 DTO
     public record TestDto(

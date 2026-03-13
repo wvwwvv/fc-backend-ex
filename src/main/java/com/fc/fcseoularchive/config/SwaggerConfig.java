@@ -28,6 +28,7 @@ public class SwaggerConfig {
                 .info(new Info().title("Todolist API")
                         .description("Todolist Application API Documentation")
                         .version("v1.0"))
+                .addServersItem(new Server().url("http://localhost:8081"))
                 .addServersItem(new Server().url("http://localhost:8080"))
                 .addServersItem(new Server().url("https://raichu.inwoohub.com"))
                 .addSecurityItem(securityRequirement)  // Security Requirement 추가

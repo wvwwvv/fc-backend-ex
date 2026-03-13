@@ -78,7 +78,7 @@ public class SecurityConfig {
 
 
                                         /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
-//                                        ,"/**"
+                                        ,"/**"
 
                                 ).permitAll()
 
@@ -87,12 +87,12 @@ public class SecurityConfig {
 
 
                                 /** 관리자만 가능한 곳! */
-                                .requestMatchers(
-                                        "/api/admin/**"
-                                ).hasRole("ADMIN")
+//                                .requestMatchers(
+//                                        "/api/admin/**"
+//                                ).hasRole("ADMIN")
 
                                 /** 위에 없으면 로그인된 회원만 가능! */
-                                .anyRequest().authenticated()
+//                                .anyRequest().authenticated()
                 );
 
         /** JWT 인증을 위해 직접 구현한 필터 UsernamePasswordAuthticationFilter 전에 실행하기 */

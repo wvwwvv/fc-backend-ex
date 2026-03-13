@@ -27,7 +27,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/raichu
+          issuer-uri: http://localhost:8080/realms/fcraichu
 
 
 # 시크릿 키는 : https://jwtsecretkeygenerator.com/ko/ 여기서 만듦
