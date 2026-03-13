@@ -34,36 +34,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
-    /*@Operation(summary = "시즌권 전체 수락 (PENDING->APPROVED)")
-    @PostMapping("/season-auth/approveAll")
-    public ResponseEntity<Void> seasonApproveAll(){
-        seasonauthService.approveAll();
-        return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
-
-
-    @Operation(summary = "시즌권 대기 전체 조회")
-    @GetMapping("/season-auth/pending")
-    public ResponseEntity<List<SeasonResponse>> seasonGetAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(seasonauthService.getAll());
-    }
-
-
-    @Operation(summary = "시즌권 수락 단건")
-    @PostMapping("/season-auth/approved/{seasonAuthId}")
-    public ResponseEntity<Void> seasonApprove(@PathVariable Long seasonAuthId){
-        seasonauthService.approve(seasonAuthId);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-
-    @Operation(summary = "시즌권 거절 단건")
-    @PostMapping("/season-auth/rejected/{seasonAuthId}")
-    public ResponseEntity<Void> seasonReject(@PathVariable Long seasonAuthId){
-        seasonauthService.rejected(seasonAuthId);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }*/
-
 
     // 모든 status 에 대해 param 으로 조회
     @Operation(summary = "모든 직관 인증 게시글 조회")
@@ -72,68 +42,6 @@ public class AdminController {
         List<PostAdminResponse> response = postService.getAllPosts();
         return ResponseEntity.ok(response);
     }
-
-
-    /*// 모든 status 에 대해 param 으로 조회
-    @Operation(summary = "status로 직관 인증 게시글 조회")
-    @GetMapping("/verifications/posts")
-    public ResponseEntity<List<PostAdminResponse>> getPostsByStatus(
-            @RequestParam(name = "status") PostStatus status
-    ) {
-        List<PostAdminResponse> response = postService.getPostsByStatus(status);
-        return ResponseEntity.ok(response);
-    }*/
-
-
-    /*// 직관 인증 수락 - 200 ok
-    @Operation(summary = "게시글 status APPROVED 로 변경")
-    @PostMapping("/verifications/posts/{postAuthId}/approve")
-    public ResponseEntity<Void> approvePost(
-            @PathVariable Long postAuthId
-    ) {
-        postService.approvePost(postAuthId);
-        return ResponseEntity.ok().build();
-    }
-
-    // 직관 인증 거절 - 204 No Content
-    @Operation(summary = "게시글 status REJECTED 로 변경")
-    @PostMapping("/verifications/posts/{postAuthId}/reject")
-    public ResponseEntity<Void> rejectPost(
-            @PathVariable Long postAuthId
-    ) {
-        postService.rejectPost(postAuthId);
-        return ResponseEntity.noContent().build();
-    }
-
-    // 직관 인증 게시물 pending 으로 되돌리기 - 개발자용
-    @Operation(summary = "게시글 status PENDING 으로 변경")
-    @PostMapping("/verifications/posts/{postAuthId}/pending")
-    public ResponseEntity<Void> resetPostToPending(
-            @PathVariable Long postAuthId
-    ) {
-        postService.resetPostToPending(postAuthId);
-        return ResponseEntity.ok().build();
-    }
-
-    // 직관 인증 게시물 draft 로 되돌리기 - 개발자용
-    @Operation(summary = "게시글 status DRAFT 으로 변경")
-    @PostMapping("/verifications/posts/{postAuthId}/draft")
-    public ResponseEntity<Void> resetPostToDraft(
-            @PathVariable Long postAuthId
-    ) {
-        postService.resetPostToDraft(postAuthId);
-        return ResponseEntity.ok().build();
-    }
-
-    // PENDING 게시물 전부 APPROVE 로 수락
-    @Operation(summary = "PENDING 인 모든 게시글 APPROVED 로 변경")
-    @PostMapping("/verifications/posts/all/approve")
-    public ResponseEntity<Void> postApproveAll() {
-        postService.approveAll();
-        return ResponseEntity.ok().build();
-    }*/
-
-
 
 
 

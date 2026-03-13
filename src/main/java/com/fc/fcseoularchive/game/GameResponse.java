@@ -3,13 +3,14 @@ package com.fc.fcseoularchive.game;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-public class GameResponse {
+public class GameResponse implements Serializable {
     private Long id;
     private LocalDateTime date;
     private Integer round;

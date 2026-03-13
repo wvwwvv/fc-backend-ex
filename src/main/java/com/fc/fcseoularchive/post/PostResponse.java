@@ -15,7 +15,7 @@ public class PostResponse {
     private String title; // 게시글 제목
     private String content;
     private LocalDateTime gameDate;
-    private String thumbnail;
+    //private String thumbnail;
     private LocalDateTime createdAt;
 
     public static PostResponse from(Post post) {
@@ -28,7 +28,7 @@ public class PostResponse {
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
         response.setGameDate(post.getGame().getDate());
-        //response.setThumbnail();
+        //response.setThumbnail(post.);
         response.setCreatedAt(post.getCreatedAt());
         return response;
     }
