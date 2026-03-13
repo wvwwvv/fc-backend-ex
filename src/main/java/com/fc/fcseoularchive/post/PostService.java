@@ -59,10 +59,14 @@ public class PostService {
         }
     }
 
-   /* @Transactional(readOnly = true)
-    public List<PostResponse> getPosts() {
-        return postAuthRepository.f
-    }*/
+    // user : 본인의 게시물 전부 조회
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPosts(Long loginId) { // 로그인 유저의 PK
+        return postRepository.findByUser_Id(loginId)
+                .stream()
+                .map(PostResponse::from)
+                .collect(Collectors.toList());
+    }
 
 
     // admin : 모든 인증 게시글 조회
