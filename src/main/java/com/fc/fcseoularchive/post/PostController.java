@@ -47,4 +47,17 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    // 본인 직관 인증 게시물 상세 데이터 조회 : PostResponseDetail dto
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDetail> getPostDetail(@PathVariable Long postId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userIdByString = authentication.getName();
+        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
+
+        PostResponseDetail response = postService.getPostDetail(postId, loginId);
+        return ResponseEntity.ok(response);
+    }
+
+
+
 }

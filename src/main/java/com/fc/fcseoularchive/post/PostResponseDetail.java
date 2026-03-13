@@ -1,35 +1,34 @@
 package com.fc.fcseoularchive.post;
 
-
 import com.fc.fcseoularchive.domain.entity.Post;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-public class PostResponse {
+public class PostResponseDetail {
     private Long postId;
     private Long gameId;
     private String title; // 게시글 제목
     private String content;
     private LocalDateTime gameDate;
-    private String thumbnail;
+    private List<String> images;
     private LocalDateTime createdAt;
 
-    public static PostResponse from(Post post) {
-        PostResponse response = new PostResponse();
-
-        // todo thumbnail : image 1개만
+    public static PostResponseDetail from(Post post) {
+        PostResponseDetail response = new PostResponseDetail();
 
         response.setPostId(post.getId());
         response.setGameId(post.getGame().getId());
         response.setTitle(post.getTitle());
         response.setContent(post.getContent());
         response.setGameDate(post.getGame().getDate());
-        // image 는 서비스에서 처리
+        // images 는 서비스 로직에서 처리
         response.setCreatedAt(post.getCreatedAt());
+
         return response;
     }
 }
