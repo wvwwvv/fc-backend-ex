@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,10 @@ public class PostService {
 
         if (postRepository.existsByUserIdAndGameId(loginId, game.getId())) {
             throw new ApiException(HttpStatus.CONFLICT, "409", "CONFLICT", "이미 직관 인증을 작성한 경기입니다.");
+        }
+        // 작성자 == 로그인 유저 확인
+        if (!Objects.equals(request.getUserId(), loginId)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "작성하려는 게시글의 유저 아이디와 현재 로그인된 유저의 아이디가 다릅니다.");
         }
 
         // Post 저장
@@ -109,6 +114,10 @@ public class PostService {
         Post post = postRepository.findByIdAndUserIdWithGame(postId, loginId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "게시글을 찾을 수 없습니다."));
 
+        if (!Objects.equals(post.getUser().getId(), loginId)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "조회하려는 게시글의 유저 아이디와 현재 로그인된 유저의 아이디가 다릅니다.");
+        }
+
         // post 는 fetch join 이므로 getGame(), getUser() 로 필드 접근 해도 N+1 문제 발생 안함
         List<String> images = imageRepository.findByGame_IdAndUser_Id(post.getGame().getId(), loginId)
                 .stream()
@@ -119,6 +128,35 @@ public class PostService {
         response.setImages(images);
 
         return response;
+    }
+
+    @Transactional
+    public void deletePost(Long postId, Long loginId) {
+        Post post = postRepository.findByIdAndUserIdWithGame(postId, loginId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "게시글을 찾을 수 없습니다."));
+
+        if (!Objects.equals(post.getUser().getId(), loginId)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "삭제하려는 게시글의 유저 아이디와 현재 로그인된 유저의 아이디가 다릅니다.");
+        }
+
+        List<Image> images = imageRepository.findByGame_IdAndUser_Id(post.getGame().getId(), loginId); // 삭제하려는 이미지들
+
+        for (Image image : images) {
+            String imagePath = image.getImage(); // 예: /upload/post/uuid_name.jpg
+            if (imagePath == null || imagePath.isBlank()) continue;
+
+            // db의 /upload/...  경로 upload/... 로 변환
+            //File 에서 절대경로 사용하면 앞의 user.fir 무시할 수 있어서 상대경로로 바꾸는 작업 필요
+            String relativePath = imagePath.startsWith("/") ? imagePath.substring(1) : imagePath;
+            File file = new File(System.getProperty("user.dir"), relativePath);
+
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        imageRepository.deleteByGame_IdAndUser_Id(post.getGame().getId(), loginId);
+        postRepository.delete(post);
     }
 
 

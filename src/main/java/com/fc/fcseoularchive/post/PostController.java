@@ -32,11 +32,6 @@ public class PostController {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         Long loginId = Long.parseLong(jwt.getClaim("id"));
 
-        // 작성자 == 로그인 유저 확인
-        if (!Objects.equals(request.getUserId(), loginId)) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "작성하려는 유저의 아이디와 현재 로그인된 유저의 아이디가 다릅니다.");
-        }
-
         postService.createPost(loginId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -64,6 +59,19 @@ public class PostController {
 
         PostResponseDetail response = postService.getPostDetail(postId, loginId);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "본인 직관 게시물 1개 삭제")
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(Authentication authentication, @PathVariable Long postId) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Long loginId = Long.parseLong(jwt.getClaim("id"));
+
+        postService.deletePost(postId, loginId);
+
+        return ResponseEntity.noContent().build();
+
     }
 
 
