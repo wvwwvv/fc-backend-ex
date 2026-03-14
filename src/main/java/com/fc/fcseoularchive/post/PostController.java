@@ -1,6 +1,5 @@
 package com.fc.fcseoularchive.post;
 
-import com.fc.fcseoularchive.error.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Tag(name = "3. PostController", description = "직관 기록 API")
 @RestController
