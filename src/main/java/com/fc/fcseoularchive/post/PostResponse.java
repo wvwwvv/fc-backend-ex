@@ -15,13 +15,11 @@ public class PostResponse {
     private String title; // 게시글 제목
     private String content;
     private LocalDateTime gameDate;
-    private String thumbnail;
+    private String thumbnail; // thumbnail : image 1개만
     private LocalDateTime createdAt;
 
     public static PostResponse from(Post post) {
         PostResponse response = new PostResponse();
-
-        // todo thumbnail : image 1개만
 
         response.setPostId(post.getId());
         response.setGameId(post.getGame().getId());

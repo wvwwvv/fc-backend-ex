@@ -7,12 +7,15 @@ import com.fc.fcseoularchive.game.GameRepository;
 import com.fc.fcseoularchive.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,28 +27,21 @@ public class PostService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
+    private final String uploadDir =System.getProperty("user.dir") +"/upload/post";
+
+
     // PostCreateRequest 에
     @Transactional
-    public void createPost(Long id, PostCreateRequest request) { // Long 타입의 id 사용 주의
-        User user = userRepository.findById(id)
+    public void createPost(Long loginId, PostCreateRequest request) throws IOException { // Long 타입의 id 사용 주의
+        User user = userRepository.findById(loginId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "유저를 찾을 수 없습니다."));
 
         Game game = gameRepository.findById(request.getGameId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
 
-        if (postRepository.existsByUserIdAndGameId(id, game.getId())) {
+        if (postRepository.existsByUserIdAndGameId(loginId, game.getId())) {
             throw new ApiException(HttpStatus.CONFLICT, "409", "CONFLICT", "이미 직관 인증을 작성한 경기입니다.");
         }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userIdByString = authentication.getName();
-        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
-
-        // todo 테스트 해봐야함
-        if (!loginId.equals(id)) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "로그인 유저의 id가 아닙니다.");
-        }
-
 
         // Post 저장
         Post post = Post.builder()
@@ -57,17 +53,39 @@ public class PostService {
 
         postRepository.save(post);
 
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
         // Image 저장
         // 이미지들은 따로 Image 테이블에 저장
         // 프론트의 request 에 image 필드가 있고, 비어있지 않을 때
         if (request.getImages() != null && !request.getImages().isEmpty()) {
-            List<Image> images = request.getImages().stream().map(url -> Image.builder()
-                    .user(user)
-                    .game(game)
-                    .image(url)
-                    .build()
-            ).toList();
-            imageRepository.saveAll(images);
+            List<Image> images = new ArrayList<>();
+
+            for (MultipartFile file : request.getImages()) {
+                if (file == null || file.isEmpty()) continue; // 안전하게 처리
+
+                String rawFileName = file.getOriginalFilename();
+                if (rawFileName == null || rawFileName.isBlank()) continue;
+
+                String fileName = UUID.randomUUID()+"_"+rawFileName;
+                File destination = new File(uploadDir, fileName);
+                file.transferTo(destination);
+
+                String imagePath = "/upload/post/"+fileName;
+
+                images.add(Image.builder()
+                        .user(user)
+                        .game(game)
+                        .image(imagePath)
+                        .build()
+                );
+            }
+
+            if (!images.isEmpty())
+                imageRepository.saveAll(images);
         }
     }
 
