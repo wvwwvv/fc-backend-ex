@@ -6,8 +6,6 @@ import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +30,6 @@ public class GameService {
         } else {
             throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "year 와 month 값이 필요합니다.");
         }
-
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String userIdByString = authentication.getName();
-//        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
 
         return games.stream().map(game -> {
             GameResponse response = new GameResponse();
