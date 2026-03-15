@@ -23,4 +23,9 @@ public class RankController {
         return rankService.getAttendanceRank(year);
     }
 
+    @Operation(summary = "시즌(year)별 승률왕 랭킹")
+    @GetMapping("/win-rate")
+    public List<WinRateRankResponse> getWinRateRank(@RequestParam int year) {
+        return rankService.getWinRateRank(year);
+    }
 }

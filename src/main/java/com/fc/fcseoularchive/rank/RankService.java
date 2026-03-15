@@ -30,9 +30,28 @@ public class RankService {
                                 row.getCount()
                         ));
                 }
-
                 return result;
+        }
 
+        // todo redis cache ttl 설정 - 1분?
+        public List<WinRateRankResponse> getWinRateRank(int year) {
+                // 3명에 대한 상위 승률 가져옴
+                // 승률은 double 타입, 서비스 계층에서 소수점 처리 필요
+                List<WinRateRankRow> rows = postRepository.findWinRateTopKByYear(year, PageRequest.of(0,3));
 
+                List<WinRateRankResponse> result = new ArrayList<>();
+                for (int i=0; i<rows.size(); i++) {
+                        WinRateRankRow row = rows.get(i);
+
+                        double rawWinRate = (double) row.getWinCount() / row.getTotalCount() * 100;
+                        double winRate = Math.floor(rawWinRate * 10.0) / 10.0; // floor 는 소수점 다 날리기
+
+                        result.add(new WinRateRankResponse(
+                                i+1,
+                                row.getNickname(),
+                                winRate
+                        ));
+                }
+                return result;
         }
 }
