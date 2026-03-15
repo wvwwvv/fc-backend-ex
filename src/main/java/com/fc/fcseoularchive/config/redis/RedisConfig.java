@@ -1,18 +1,28 @@
 package com.fc.fcseoularchive.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
 @EnableRedisRepositories
+@EnableCaching
 public class RedisConfig {
 
     // 환경변수 에서 host, port 값 주입하기
@@ -58,6 +68,31 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
 
         return redisTemplate;
+
+    }
+
+    // 캐시 데이터를 어떻게 직렬화해서 Redis 에 넣을지
+    // 각 캐시 이름(value) 별로 TTL 제어
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        // 기본 설정 : Json 형태로 저장 되도록 세팅
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+
+        // 캐시 이름별 TTL 설정
+        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+
+        // attendanceRank 캐시 : 1분 뒤 만료
+        cacheConfigurations.put("attendanceRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+
+        // winRateRank 캐시 : 1분 뒤 만료
+        cacheConfigurations.put("winRateRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+
+        return RedisCacheManager.builder(connectionFactory)
+                .cacheDefaults(defaultConfig)
+                .withInitialCacheConfigurations(cacheConfigurations)
+                .build();
 
     }
 

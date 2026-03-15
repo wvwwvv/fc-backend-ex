@@ -3,6 +3,7 @@ package com.fc.fcseoularchive.rank;
 
 import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,9 @@ import java.util.List;
 public class RankService {
         private final PostRepository postRepository;
 
-        // todo redis cache ttl 설정 - 1분?
+        // ttl 설정 - 1분 년도 별로
+        // attendance::2026 형태로 (value + key 조합) Redis 의 실제 Key 역할을 하며 서버에 객체 리스트 저장
+        @Cacheable(value = "attendanceRank", key="#year")
         public List<AttendanceRankResponse> getAttendanceRank(int year) {
                 // 0: 페이지 번호, 3: 페이지 크기
                 // 앞에서 3개 객체만 가져오는 효과
@@ -33,7 +36,8 @@ public class RankService {
                 return result;
         }
 
-        // todo redis cache ttl 설정 - 1분?
+        // ttl 설정 - 1분
+        @Cacheable(value = "winRateRank", key= "#year")
         public List<WinRateRankResponse> getWinRateRank(int year) {
                 // 3명에 대한 상위 승률 가져옴
                 // 승률은 double 타입, 서비스 계층에서 소수점 처리 필요
