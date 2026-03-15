@@ -1,5 +1,10 @@
 package com.fc.fcseoularchive.config.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -75,19 +80,38 @@ public class RedisConfig {
     // 각 캐시 이름(value) 별로 TTL 제어
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+
+        // ObjectMapper 생성
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // LocalDateTime 해결 - 시간/날짜 타입도 직렬/역직렬 가능
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 "2026-03-15T.." 형태로 저장
+
+        // 캐시에서 객체를 꺼낼 때 원래 타입으로 정확히 복원
+        PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType(Object.class)
+                .build();
+        objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
+
+        // ObjectMapper 를 Redis 직렬화기에 장착
+        GenericJackson2JsonRedisSerializer customSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+
         // 기본 설정 : Json 형태로 저장 되도록 세팅
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(customSerializer));
 
         // 캐시 이름별 TTL 설정
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-        // attendanceRank 캐시 : 1분 뒤 만료
+        // 직관왕 랭킹 attendanceRank 캐시 : 1분 뒤 만료
         cacheConfigurations.put("attendanceRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
 
-        // winRateRank 캐시 : 1분 뒤 만료
+        // 승률왕 랭킹 winRateRank 캐시 : 1분 뒤 만료
         cacheConfigurations.put("winRateRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+
+        // 게스트용 경기 일정 조회 guestGames 캐시 : 1시간 뒤 만료
+        cacheConfigurations.put("guestGames", defaultConfig.entryTtl(Duration.ofHours(1)));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultConfig)
