@@ -9,12 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PostCreateRequest {
-    @NotNull
-    private Long gameId;
-
-    @NotNull
-    private Long userId; // User 테이블의 id(PK)
+public class PostUpdateRequest {
 
     @NotNull
     private String title;
@@ -22,5 +17,5 @@ public class PostCreateRequest {
     @NotNull
     private String content;
 
-    private List<MultipartFile> images; // 현장 사진 리스트
+    private List<MultipartFile> images;
 }

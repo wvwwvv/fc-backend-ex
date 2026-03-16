@@ -6,8 +6,6 @@ import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +30,6 @@ public class GameService {
         } else {
             throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "year 와 month 값이 필요합니다.");
         }
-
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String userIdByString = authentication.getName();
-//        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
 
         return games.stream().map(game -> {
             GameResponse response = new GameResponse();
@@ -69,8 +63,8 @@ public class GameService {
     }
 
 
-    // Guest용 특정 연도 경기 정보 조회 // todo ttl 1시간
-    @Cacheable(value = "guestGamesByYear", key = "#year")
+    // Guest용 특정 연도, 달 경기 정보 조회 ttl 1시간
+    @Cacheable(value = "guestGames", key = "#year + '-' + #month")
     public List<GameResponse> getAllGamesForGuestByYear(int year, int month) {
         List<Game> games = gameRepository.findByYearOrderByDateAsc(year, month);
 
@@ -102,10 +96,7 @@ public class GameService {
         }).collect(Collectors.toList());
     }
 
-    public GameResponse getGameByUser(Long gameId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userIdByString = authentication.getName();
-        Long loginId = Long.parseLong(userIdByString); // 로그인 유저의 id
+    public GameResponse getGameByUser(Long loginId, Long gameId) {
 
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
