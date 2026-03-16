@@ -45,7 +45,8 @@ public class SecurityConfig {
         httpSecurity
 
                 /** 스프링 시큐리티 필터 체인에서 CORS 허용 */
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
 
                 /** REST API -> basic auth 및 csrf 보안을 사용안함 */
                 .csrf(AbstractHttpConfigurer::disable)
@@ -62,33 +63,34 @@ public class SecurityConfig {
 
                 /** http request 인증 설정 중요함 !! (API 만들 때마다 수정해 줘야하나 😬) */
                 .authorizeHttpRequests(authorize ->
-                        authorize
-                                /** 다 열어주는 곳 !! */
-                                .requestMatchers(
-                                        "/swagger-ui/**", // Swagger
-                                        "/v3/api-docs/**", // Swagger
-                                        "/error/**", // Error Test
-                                        "/api/users/join",
-                                        "/api/users/login",
-                                        "/api/users/refresh"
+                                authorize
+                                        /** 다 열어주는 곳 !! */
+                                        .requestMatchers(
+                                                "/swagger-ui/**", // Swagger
+                                                "/v3/api-docs/**", // Swagger
+                                                "/error/**", // Error Test
+                                                "/api/users/join",
+                                                "/api/games/guest",
+                                                "/api/players/**",
+                                                "/api/rankings/**"
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
-                                        ,"/**"
+//                                                , "/**"
 
-                                ).permitAll()
+                                        ).permitAll()
 
-                                /** POST 전부 열어주는 곳 */
-                                // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
+                        /** POST 전부 열어주는 곳 */
+                        // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
 
 
-                                /** 관리자만 가능한 곳! */
-//                                .requestMatchers(
-//                                        "/api/admin/**"
-//                                ).hasRole("ADMIN")
+                        /** 관리자만 가능한 곳! */
+                                .requestMatchers(
+                                        "/api/admin/**"
+                                ).hasRole("ADMIN")
 
-                                /** 위에 없으면 로그인된 회원만 가능! */
-//                                .anyRequest().authenticated()
+                        /** 위에 없으면 로그인된 회원만 가능! */
+                                .anyRequest().authenticated()
                 );
 
         /** JWT 인증을 위해 직접 구현한 필터 UsernamePasswordAuthticationFilter 전에 실행하기 */
@@ -107,12 +109,13 @@ public class SecurityConfig {
     }
 
 
-    /** CORS 설정 */
+    /**
+     * CORS 설정
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://raichu.inwoohub.com", "https://fc-raichu.vercel.app"));
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://raichu.inwoohub.com", "https://fc-raichu.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
@@ -123,28 +126,32 @@ public class SecurityConfig {
         return source;
     }
 
-    /** Keycloak의 Jwt 의 권한을 꺼내서 Authentication 에 올려주기 */
+    /**
+     * Keycloak의 Jwt 의 권한을 꺼내서 Authentication 에 올려주기
+     */
     @Bean
-    public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter(){
+    public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
         return converter;
     }
 
-    /** 클레임에서 권한을 꺼내서 시큐리티 컨텍스트에 권한 등록 */
-    static class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>>{
+    /**
+     * 클레임에서 권한을 꺼내서 시큐리티 컨텍스트에 권한 등록
+     */
+    static class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
         @Override
-        public Collection<GrantedAuthority> convert(Jwt jwt){
+        public Collection<GrantedAuthority> convert(Jwt jwt) {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
 
             // 클레임에서 "role" 꺼내기
             String role = jwt.getClaim("role");
-            if(role == null){
+            if (role == null) {
                 // 없다면 바로 반환
                 return authorities;
             } else {
                 // 있다면 권한 리스트에 추가해주기
-                authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
             }
 
             return authorities;
