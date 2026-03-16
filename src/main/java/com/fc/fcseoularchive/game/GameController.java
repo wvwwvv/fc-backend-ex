@@ -52,7 +52,7 @@ public class GameController {
     ) {
         List<GameResponse> response;
 
-        response = gameService.getAllGamesV2(null, year, month);
+        response = gameService.getAllGamesV2ForGuest(null, year, month);
 
         return ResponseEntity.ok(response);
     }

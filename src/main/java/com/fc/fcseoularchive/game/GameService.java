@@ -113,8 +113,52 @@ public class GameService {
                 .toList();
     }
 
+    @Cacheable(value = "guestGames", key = "#year + '-' + #month")
+    public List<GameResponse> getAllGamesV2ForGuest(Long loginId, Integer year, Integer month) {
 
-    // Guest용 특정 연도, 달 경기 정보 조회 ttl 1시간
+        List<Game> gameAll = gameRepository.getAll(year, month);
+
+        // 2. 이제 post 가져올건데 이때 패치조인으로 경기랑, 유저까지 다 담아올거야
+        List<Post> postAll = null;
+        if(loginId == null){
+            postAll = postRepository.findAll();
+        }else{
+            postAll = postRepository.getPostAll(loginId);
+        }
+
+        // 3. game.id 가 키가되고, 그 안에 value 는 List<Post> 가 있다.
+        Map<Long, List<Post>> postMap = postAll.stream()
+                .collect(Collectors.groupingBy(post -> post.getGame().getId()));
+
+        // Map<Long, List<Post>> postMap =
+        // Long : game.id (1, 2, 3, 4, 5 ...)
+        // List<Post> =  1 조회 -> <Post.game.id == 1 , ... . ._>
+
+        // post -> 우리의 아이디가 담긴것만 가져왔어요. 이러면 1:1 매핑이됨, 대신 gameAll 에서 없는것도 있음. null 가능.
+        return gameAll.stream()
+                .map(
+                        g -> {
+                            List<Post> list = postMap.getOrDefault(g.getId(), List.of()).stream().toList();
+                            boolean isAttended = false;
+
+                            if(loginId != null){     // 로그인 했고,
+                                if(!list.isEmpty()){ // 봤던 경기라면!
+                                    isAttended = true;
+                                }
+                            }
+
+                            // 상대팀 찾기 : 홈팀이 "FC서울" 이 아니면 awayTeam 이 opponent
+                            String opponent = g.getHomeTeam().equals("FC서울") ? g.getAwayTeam() : g.getHomeTeam();
+                            // 결과 : 결과가 있다면 FINISHED 없다면, SCHEDULED
+                            String status = (g.getResult() == null ? "SCHEDULED" : "FINISHED");
+                            return new GameResponse(g, opponent, status, isAttended);
+                        }
+                )
+                .toList();
+    }
+
+
+    /*// Guest용 특정 연도, 달 경기 정보 조회 ttl 1시간
     @Cacheable(value = "guestGames", key = "#year + '-' + #month")
     public List<GameResponse> getAllGamesForGuestByYear(int year, int month) {
         List<Game> games = gameRepository.findByYearOrderByDateAsc(year, month);
@@ -145,7 +189,7 @@ public class GameService {
 
             return response;
         }).collect(Collectors.toList());
-    }
+    }*/
 
     public GameResponse getGameByUser(Long loginId, Long gameId) {
 
