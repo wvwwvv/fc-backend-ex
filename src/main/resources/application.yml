@@ -27,20 +27,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://raichu.inwoohub.com/auth/realms/fcraichu
+#          issuer-uri: https://raichu.inwoohub.com/auth/realms/fcraichu
+          issuer-uri: http://localhost:8080/realms/fcraichu
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
-
-# 시크릿 키는 : https://jwtsecretkeygenerator.com/ko/ 여기서 만듦
-jwt:
-  secret: ${SPRING_JWT_SECRET:CD9KEjLo1DkQB6EMWo8RZPl2i8XAxv4RLVNAC3dmdVf}
-  access-token:
-    expire-time: 3600000 # 1000 * 60 * 60 = 1시간
-  refresh-token:
-    expire-time: 604800000 # 1000 * 60 * 60 * 24 * 7 = 7일
 
 
 # 테스트용
@@ -62,3 +55,12 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+
+
+# 시크릿 키는 : https://jwtsecretkeygenerator.com/ko/ 여기서 만듦
+#jwt:
+#  secret: ${SPRING_JWT_SECRET:CD9KEjLo1DkQB6EMWo8RZPl2i8XAxv4RLVNAC3dmdVf}
+#  access-token:
+#    expire-time: 3600000 # 1000 * 60 * 60 = 1시간
+#  refresh-token:
+#    expire-time: 604800000 # 1000 * 60 * 60 * 24 * 7 = 7일

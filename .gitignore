@@ -39,3 +39,6 @@ out/
 docker-compose.yml
 
 .env
+
+/upload
+/uploads

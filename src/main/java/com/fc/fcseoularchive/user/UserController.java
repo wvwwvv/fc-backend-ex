@@ -1,6 +1,7 @@
 package com.fc.fcseoularchive.user;
 
 
+import com.fc.fcseoularchive.config.CurrentUserProvider;
 import com.fc.fcseoularchive.user.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final CurrentUserProvider currentUserProvider;
 
     @Operation(summary = "회원 가입")
     @PostMapping("/join")
@@ -26,27 +28,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "id로 유저 1명 조회")
+    @Operation(summary = "내 정보 조회 + 출석체크")
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getUser(Authentication authentication) {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(loginId));
+    public ResponseEntity<UserResponseMe> getUser(Authentication authentication) {
+        Long userId = currentUserProvider.getCurrentUserId(authentication);
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId));
     }
 
-    @Operation(summary = "로그인")
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req){
-        LoginResponse login = userService.login(req);
-        return ResponseEntity.status(HttpStatus.OK).body(login);
-    }
-
-    @Operation(summary = "리프레시 토큰 및 일반 토큰 재발급")
-    @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshReqeust req){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(req));
+    @Operation(summary = "닉네임 변경")
+    @PatchMapping("/nickname")
+    public ResponseEntity<Void> nicknameUpdate(Authentication authentication, @RequestBody UpdateNicknameRequest req) {
+        Long userId = currentUserProvider.getCurrentUserId(authentication);
+        userService.updateNickname(userId, req.getNickname());
+        return  ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //    @Operation(summary = "유저 아이디로 1명 조회")
@@ -81,5 +75,20 @@ public class UserController {
      *  2,3 은 구현이 난이도 증가 및 stateless 불가능 그래도 보안관점 좋음
      *  1 은 구현 난이도 쉬움 대신 stateless 가능 보안관점 안좋음 (우리는 시간이 많지 않고 토큰 유실은 어차피 클라이언트 잘못이라 1번으로 채택했었음)
      */
+
+    /** 안 쓰는 컨트롤러 */
+
+    //    @Operation(summary = "로그인")
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req){
+//        LoginResponse login = userService.login(req);
+//        return ResponseEntity.status(HttpStatus.OK).body(login);
+//    }
+//
+//    @Operation(summary = "리프레시 토큰 및 일반 토큰 재발급")
+//    @PostMapping("/refresh")
+//    public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshReqeust req){
+//        return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(req));
+//    }
 
 }

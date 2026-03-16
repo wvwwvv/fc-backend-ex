@@ -1,6 +1,5 @@
 package com.fc.fcseoularchive.config;
 
-import com.fc.fcseoularchive.config.jwt.JwtTokenProvider;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.core.convert.converter.Converter;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +23,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final JwtTokenProvider jwtTokenProvider;
 
     // 패스워드 암호화 관련 메서드 Bean 등록
     @Bean
@@ -139,25 +135,17 @@ public class SecurityConfig {
         @Override
         public Collection<GrantedAuthority> convert(Jwt jwt){
             Collection<GrantedAuthority> authorities = new ArrayList<>();
-            Map<String, Object> realmAccess = jwt.getClaim("realm_access");
 
-            // 랠름에서 access 가 없다면 빈 권한으로 반환
-            if(realmAccess == null){
+            // 클레임에서 "role" 꺼내기
+            String role = jwt.getClaim("role");
+            if(role == null){
+                // 없다면 바로 반환
                 return authorities;
+            } else {
+                // 있다면 권한 리스트에 추가해주기
+                authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
             }
 
-            // 랠름_Access에서 roles: 꺼내기
-            Object rolesObj = realmAccess.get("roles");
-            if(!(rolesObj instanceof List<?> roles)){
-                // roles에 아무것도 없다면 빈 배열 반환
-                return authorities;
-            }
-
-            for (Object role : roles) {
-                if(role instanceof String roleNmae){
-                    authorities.add(new SimpleGrantedAuthority("ROLE_"+roleNmae)); // 시큐리티에서 hasRole() 쓰려면 프리픽스로 "ROLE_" 붙여주기
-                }
-            }
             return authorities;
         }
     }

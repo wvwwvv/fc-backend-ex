@@ -48,8 +48,8 @@ public class GameService {
             boolean existPost = postRepository.existsByUserIdAndGameId(loginId, game.getId());
             response.setIsAttended(existPost);
 
-            // 상대팀 찾기 : 홈팀이 "FC Seoul" 이 아니면 awayTeam 이 opponent
-            String opponent = game.getHomeTeam().equals("FC Seoul") ? game.getAwayTeam() : game.getHomeTeam();
+            // 상대팀 찾기 : 홈팀이 "FC서울" 이 아니면 awayTeam 이 opponent
+            String opponent = game.getHomeTeam().equals("FC서울") ? game.getAwayTeam() : game.getHomeTeam();
             response.setOpponent(opponent);
 
             // 경기 결과 (W, D, L) 가 null 이면 "경기 전"
@@ -82,8 +82,8 @@ public class GameService {
 
             response.setIsAttended(false);
 
-            // 상대팀 찾기 : 홈팀이 "FC Seoul" 이 아니면 awayTeam 이 opponent
-            String opponent = game.getHomeTeam().equals("FC Seoul") ? game.getAwayTeam() : game.getHomeTeam();
+            // 상대팀 찾기 : 홈팀이 "FC서울" 이 아니면 awayTeam 이 opponent
+            String opponent = game.getHomeTeam().equals("FC서울") ? game.getAwayTeam() : game.getHomeTeam();
             response.setOpponent(opponent);
 
             // 경기 결과 (W, D, L) 가 null 이면 "경기 전"
@@ -115,7 +115,7 @@ public class GameService {
         boolean existPost = postRepository.existsByUserIdAndGameId(loginId, game.getId());
         response.setIsAttended(existPost);
 
-        String opponent = game.getHomeTeam().equals("FC Seoul") ? game.getAwayTeam() : game.getHomeTeam();
+        String opponent = game.getHomeTeam().equals("FC서울") ? game.getAwayTeam() : game.getHomeTeam();
         response.setOpponent(opponent);
 
         response.setStatus(game.getResult() == null ? "SCHEDULED" : "FINISHED");

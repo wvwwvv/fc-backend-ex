@@ -11,8 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String property = System.getProperty("user.dir");
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:"+property+"/uploads/");
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:"+property+"/upload/");
     }
 
 //  해당 cors 설정은 Security 에서 대체

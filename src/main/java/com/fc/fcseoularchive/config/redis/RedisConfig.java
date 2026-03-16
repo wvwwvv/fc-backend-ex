@@ -113,6 +113,8 @@ public class RedisConfig {
         // 게스트용 경기 일정 조회 guestGames 캐시 : 1시간 뒤 만료
         cacheConfigurations.put("guestGames", defaultConfig.entryTtl(Duration.ofHours(1)));
 
+        // 인우추가함.
+
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultConfig)
                 .withInitialCacheConfigurations(cacheConfigurations)

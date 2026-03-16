@@ -3,18 +3,24 @@ package com.fc.fcseoularchive.admin;
 import com.fc.fcseoularchive.domain.entity.Game;
 import com.fc.fcseoularchive.game.GameAdminRequest;
 import com.fc.fcseoularchive.game.GameService;
+import com.fc.fcseoularchive.player.PlayerService;
+import com.fc.fcseoularchive.player.dto.CreatePlayerRequest;
+import com.fc.fcseoularchive.player.dto.UpdatePlayerReqeust;
 import com.fc.fcseoularchive.post.PostAdminResponse;
 import com.fc.fcseoularchive.post.PostService;
 import com.fc.fcseoularchive.user.dto.UserResponse;
 import com.fc.fcseoularchive.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.webmvc.core.service.RequestService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "0. AdminController")
@@ -26,7 +32,7 @@ public class AdminController {
     private final UserService userService;
     private final PostService postService;
     private final GameService gameService;
-    private final RequestService requestBuilder;
+    private final PlayerService playerService;
 
     @Operation(summary = "회원 전체 조회")
     @GetMapping("/users")
@@ -79,6 +85,27 @@ public class AdminController {
     public ResponseEntity<Void> deleteGame (@PathVariable Long gameId) {
         gameService.deleteGame(gameId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "선수 생성")
+    @PostMapping(value = "/player", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> createPlayer(@Valid @ModelAttribute CreatePlayerRequest req) throws IOException {
+        playerService.createPlayer(req);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "선수 정보 업데이트")
+    @PutMapping(value = "/player/{id}", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updatePlayer(@PathVariable long id, @ModelAttribute UpdatePlayerReqeust req) throws IOException {
+        playerService.updatePlayer(id, req);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "선수 삭제, 사용 x, update로 처리하기")
+    @DeleteMapping("/player/{id}")
+    public ResponseEntity<Void> deletePlayer(@PathVariable long id) {
+        playerService.deletePlayer(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -30,7 +30,6 @@ public class PostService {
 
     private final String uploadDir =System.getProperty("user.dir") +"/upload/post";
 
-
     // PostCreateRequest 에
     @Transactional
     public void createPost(Long loginId, PostCreateRequest request) throws IOException { // Long 타입의 id 사용 주의

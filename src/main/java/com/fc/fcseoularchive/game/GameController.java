@@ -1,5 +1,6 @@
 package com.fc.fcseoularchive.game;
 
+import com.fc.fcseoularchive.config.CurrentUserProvider;
 import org.springframework.security.oauth2.jwt.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+    private final CurrentUserProvider currentUserProvider;
 
     @Operation(summary = "경기 전체 일정 조회")
     @GetMapping("/all")
@@ -58,8 +60,7 @@ public class GameController {
     @Operation(summary = "경기 정보 검색")
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> getGame (Authentication authentication, @PathVariable Long gameId) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
 
         GameResponse game = gameService.getGameByUser(loginId, gameId);
         return ResponseEntity.status(HttpStatus.OK).body(game);

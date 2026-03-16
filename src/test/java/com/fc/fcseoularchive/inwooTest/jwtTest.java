@@ -69,9 +69,6 @@ public class jwtTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
 
     @Autowired
     private RedisDao redisDao;
