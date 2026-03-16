@@ -72,7 +72,8 @@ public class SecurityConfig {
                                                 "/api/users/join",
                                                 "/api/games/guest",
                                                 "/api/players/**",
-                                                "/api/rankings/**"
+                                                "/api/rankings/**",
+                                                "/upload/**"
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
@@ -80,17 +81,17 @@ public class SecurityConfig {
 
                                         ).permitAll()
 
-                        /** POST 전부 열어주는 곳 */
-                        // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
+                                        /** POST 전부 열어주는 곳 */
+                                        // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
 
 
-                        /** 관리자만 가능한 곳! */
-                                .requestMatchers(
-                                        "/api/admin/**"
-                                ).hasRole("ADMIN")
+                                        /** 관리자만 가능한 곳! */
+                                        .requestMatchers(
+                                                "/api/admin/**"
+                                        ).hasRole("ADMIN")
 
-                        /** 위에 없으면 로그인된 회원만 가능! */
-                                .anyRequest().authenticated()
+                                        /** 위에 없으면 로그인된 회원만 가능! */
+                                        .anyRequest().authenticated()
                 );
 
         /** JWT 인증을 위해 직접 구현한 필터 UsernamePasswordAuthticationFilter 전에 실행하기 */
