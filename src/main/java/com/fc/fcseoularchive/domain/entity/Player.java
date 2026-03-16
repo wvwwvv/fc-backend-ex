@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity @Getter
-@Table(name = "palyers")
+@Table(name = "players")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Player {
 

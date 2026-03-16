@@ -1,5 +1,6 @@
 package com.fc.fcseoularchive.config.redis;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
@@ -56,8 +57,8 @@ public class RedisConfig {
     // RedisTemplate 설정하기
     // RedisTemplate은 DB 서버에 Set, Get, Delete 등을 사용할 수 있음
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
-        // RedisTemplate는 트랜잭션을 지원함.
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper redisObjectMapper){
+       /* // RedisTemplate는 트랜잭션을 지원함.
         // 트랜잭션 안에서 오류가 발생한다면 -> 그 작업 모두 취소 가능
 
         // Redis와 통신할 때 사용할 템플릿 설정하기
@@ -72,6 +73,21 @@ public class RedisConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
 
+        return redisTemplate;*/
+
+
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        GenericJackson2JsonRedisSerializer valueSerializer =
+                new GenericJackson2JsonRedisSerializer(redisObjectMapper);
+
+        redisTemplate.setKeySerializer(keySerializer);
+        redisTemplate.setValueSerializer(valueSerializer);
+        redisTemplate.setHashKeySerializer(keySerializer);
+        redisTemplate.setHashValueSerializer(valueSerializer);
+
         return redisTemplate;
 
     }
@@ -79,21 +95,10 @@ public class RedisConfig {
     // 캐시 데이터를 어떻게 직렬화해서 Redis 에 넣을지
     // 각 캐시 이름(value) 별로 TTL 제어
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-
-        // ObjectMapper 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // LocalDateTime 해결 - 시간/날짜 타입도 직렬/역직렬 가능
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 "2026-03-15T.." 형태로 저장
-
-        // 캐시에서 객체를 꺼낼 때 원래 타입으로 정확히 복원
-        PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
-                .allowIfSubType(Object.class)
-                .build();
-        objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory, ObjectMapper redisObjectMapper) {
 
         // ObjectMapper 를 Redis 직렬화기에 장착
-        GenericJackson2JsonRedisSerializer customSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        GenericJackson2JsonRedisSerializer customSerializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
 
 
         // 기본 설정 : Json 형태로 저장 되도록 세팅
@@ -113,7 +118,8 @@ public class RedisConfig {
         // 게스트용 경기 일정 조회 guestGames 캐시 : 1시간 뒤 만료
         cacheConfigurations.put("guestGames", defaultConfig.entryTtl(Duration.ofHours(1)));
 
-        // 인우추가함.
+        // 선수 페이지 (with 도네이션 랭킹 정보) allPlayers 캐시 : 3분 뒤 만료
+        cacheConfigurations.put("allPlayers", defaultConfig.entryTtl(Duration.ofMinutes(3)));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultConfig)

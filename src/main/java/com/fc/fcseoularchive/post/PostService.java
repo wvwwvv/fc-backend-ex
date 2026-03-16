@@ -7,6 +7,9 @@ import com.fc.fcseoularchive.game.GameRepository;
 import com.fc.fcseoularchive.post.dto.*;
 import com.fc.fcseoularchive.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +32,14 @@ public class PostService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
-    private final String uploadDir =System.getProperty("user.dir") +"/upload/post";
+    private final String uploadDir = System.getProperty("user.dir") + "/upload/post";
 
     // PostCreateRequest 에
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "attendanceRank", allEntries = true),
+            @CacheEvict(value = "winRateRank", allEntries = true)
+    })
     public void createPost(Long loginId, PostCreateRequest request) throws IOException { // Long 타입의 id 사용 주의
         User user = userRepository.findById(loginId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "404", "NOT_FOUND", "유저를 찾을 수 없습니다."));
@@ -75,11 +82,11 @@ public class PostService {
                 String rawFileName = file.getOriginalFilename();
                 if (rawFileName == null || rawFileName.isBlank()) continue;
 
-                String fileName = UUID.randomUUID()+"_"+rawFileName;
+                String fileName = UUID.randomUUID() + "_" + rawFileName;
                 File destination = new File(uploadDir, fileName);
                 file.transferTo(destination);
 
-                String imagePath = "/upload/post/"+fileName;
+                String imagePath = "/upload/post/" + fileName;
 
                 images.add(Image.builder()
                         .user(user)
@@ -91,7 +98,10 @@ public class PostService {
 
             if (!images.isEmpty())
                 imageRepository.saveAll(images);
+
+            // 게시물 작성하면 500 포인트
         }
+        user.addPoints(500);
     }
 
     // user : 본인의 게시물 전부 조회
@@ -132,6 +142,10 @@ public class PostService {
 
     // 수정
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "attendanceRank", allEntries = true),
+            @CacheEvict(value = "winRateRank", allEntries = true)
+    })
     public void updatePost(Long postId, Long loginId, PostUpdateRequest request) throws IOException {
         Post post = postRepository.findByIdAndUserIdWithGame(postId, loginId) // fetch join
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "게시글을 찾을 수 없습니다."));
@@ -195,12 +209,24 @@ public class PostService {
 
     // 삭제
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "attendanceRank", allEntries = true),
+            @CacheEvict(value = "winRateRank", allEntries = true)
+    })
     public void deletePost(Long postId, Long loginId) {
         Post post = postRepository.findByIdAndUserIdWithGame(postId, loginId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "게시글을 찾을 수 없습니다."));
 
         if (!Objects.equals(post.getUser().getId(), loginId)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "삭제하려는 게시글의 유저 아이디와 현재 로그인된 유저의 아이디가 다릅니다.");
+        }
+
+        // 삭제, 포인트 반환 로직 - 포인트 악용 방지
+        User user = userRepository.findById(loginId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "유저를 찾을 수 없습니다."));
+
+        if (user.getPoints() < 500) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "반환 포인트가 부족해 게시글을 삭제할 수 없습니다.");
         }
 
         List<Image> images = imageRepository.findByGame_IdAndUser_Id(post.getGame().getId(), loginId); // 삭제하려는 이미지들

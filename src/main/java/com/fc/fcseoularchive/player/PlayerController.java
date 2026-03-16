@@ -32,6 +32,7 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
 
+    // 이것만 cache, ttl, evict
     @Operation(summary = "현역 선수 전체 조회 + 랭킹")
     @GetMapping("/active")
     public ResponseEntity<List<PlayerResponseRank>> getAllPlayers() {

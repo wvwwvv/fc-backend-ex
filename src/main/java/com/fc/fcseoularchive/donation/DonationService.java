@@ -7,6 +7,7 @@ import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.player.PlayerRepository;
 import com.fc.fcseoularchive.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class DonationService {
     private final PlayerRepository playerRepository;
 
     @Transactional
+    @CacheEvict(value = "allPlayers", allEntries = true)
     public void create(Long userId, Long playerId, Integer point){
 
         User user = userRepository.findById(userId)

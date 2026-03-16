@@ -19,6 +19,7 @@ public class RankService {
 
         // ttl 설정 - 1분 년도 별로
         // attendance::2026 형태로 (value + key 조합) Redis 의 실제 Key 역할을 하며 서버에 객체 리스트 저장
+        // 랭킹이 변하는 것은 유저가 게시글 create, update, delete 하는 경우
         @Cacheable(value = "attendanceRank", key="#year")
         public List<AttendanceRankResponse> getAttendanceRank(int year) {
                 // 0: 페이지 번호, 3: 페이지 크기

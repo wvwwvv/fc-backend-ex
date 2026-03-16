@@ -11,6 +11,8 @@ import com.fc.fcseoularchive.player.dto.PlayerResponse;
 import com.fc.fcseoularchive.player.dto.PlayerResponseRank;
 import com.fc.fcseoularchive.player.dto.UpdatePlayerReqeust;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ public class PlayerService {
 
     // 선수 생성
     @Transactional
+    @CacheEvict(value = "allPlayers", allEntries = true)
     public void createPlayer(CreatePlayerRequest req) throws IOException {
 
         // 업로드 폴더 없으면 폴더 생성
@@ -71,6 +74,7 @@ public class PlayerService {
 
     // 선수 업데이트
     @Transactional
+    @CacheEvict(value = "allPlayers", allEntries = true)
     public void updatePlayer(long id, UpdatePlayerReqeust req) throws IOException {
         // 정보 가져오기
         Player player = playerRepository.findById(id)
@@ -128,6 +132,8 @@ public class PlayerService {
      */
 
     // 선수 전체 조회 + 유저 랭킹
+    // cacheEvict : 1. 선수에게 후원할 때, 2. 선수 정보가 수정될 때
+    @Cacheable(value = "allPlayers", key = "'2026'")
     public List<PlayerResponseRank> getAllPlayersV2() {
 
         // 1. player 전부 가져오기 (현역 선수만!)
@@ -305,6 +311,7 @@ public class PlayerService {
     }
 
     // 선수 삭제
+    @CacheEvict(value = "allPlayers", allEntries = true)
     public void deletePlayer(long id) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않은 선수입니다."));

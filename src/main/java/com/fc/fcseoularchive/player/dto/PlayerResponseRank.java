@@ -4,26 +4,32 @@ package com.fc.fcseoularchive.player.dto;
 import com.fc.fcseoularchive.domain.entity.Player;
 import com.fc.fcseoularchive.domain.enums.PlayerPosition;
 import com.fc.fcseoularchive.domain.enums.PlayerStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlayerResponseRank {
 
-    private final Integer id;
+    private Integer id;
 
-    private final String name;
+    private String name;
 
-    private final Integer backNumber;
+    private Integer backNumber;
 
-    private final PlayerPosition position;
+    private PlayerPosition position;
 
-    private final PlayerStatus status;
+    private PlayerStatus status;
 
-    private final String image;
+    private String image;
 
-    private final HashMap<Integer,String> userRank;
+    private HashMap<Integer,String> userRank;
 
     public PlayerResponseRank(Player player, HashMap<Integer,String> userRank) {
         this.id = player.getId();

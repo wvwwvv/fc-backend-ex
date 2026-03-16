@@ -6,6 +6,7 @@ import com.fc.fcseoularchive.game.dto.GameAdminRequest;
 import com.fc.fcseoularchive.game.dto.GameResponse;
 import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,7 @@ public class GameService {
 
 
     // Guest용 특정 연도, 달 경기 정보 조회 ttl 1시간
+    // admin의 games create, update, delete 에 Evict 추가
     @Cacheable(value = "guestGames", key = "#year + '-' + #month")
     public List<GameResponse> getAllGamesForGuestByYear(int year, int month) {
         List<Game> games = gameRepository.findByYearOrderByDateAsc(year, month);
@@ -130,6 +132,7 @@ public class GameService {
 
     // admin : 경기 추가
     @Transactional
+    @CacheEvict(value = "guestGames", allEntries = true)
     public void addGame(GameAdminRequest request) {
         Game game = Game.builder()
                 .date(request.getDate())
@@ -155,6 +158,7 @@ public class GameService {
     }
 
     // admin : 경기 1개 정보 수정 (모든 필드 제어 가능)
+    @CacheEvict(value = "guestGames", allEntries = true)
     @Transactional
     public Game updateGame(Long gameId, GameAdminRequest request) {
         Game game = gameRepository.findById(gameId)
@@ -178,6 +182,7 @@ public class GameService {
 
     // admin : 경기 삭제
     @Transactional
+    @CacheEvict(value = "guestGames", allEntries = true)
     public void deleteGame(Long gameId) {
         gameRepository.findById(gameId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "경기가 존재하지 않습니다."));
