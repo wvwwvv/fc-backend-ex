@@ -45,8 +45,7 @@ public class SecurityConfig {
         httpSecurity
 
                 /** 스프링 시큐리티 필터 체인에서 CORS 허용 */
-                .cors(cors -> {
-                })
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 /** REST API -> basic auth 및 csrf 보안을 사용안함 */
                 .csrf(AbstractHttpConfigurer::disable)
@@ -83,7 +82,7 @@ public class SecurityConfig {
 
                                         /** POST 전부 열어주는 곳 */
                                         // ex) .requestMatchers(HttpMethod.POST, "/api/users/join").permitAll()
-
+                                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 
                                         /** 관리자만 가능한 곳! */
                                         .requestMatchers(
