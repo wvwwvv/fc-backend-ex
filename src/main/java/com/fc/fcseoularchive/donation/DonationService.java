@@ -37,6 +37,11 @@ public class DonationService {
             throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "잔액이 부족합니다." );
         }
 
+        // 후원 시 음수로 받아오는것 에러 처리
+        if(point <= 0 ){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "1원 이상부터 가능합니다." );
+        }
+
         user.subtractPoints(point); // 포인트 차감 완료
 
 
