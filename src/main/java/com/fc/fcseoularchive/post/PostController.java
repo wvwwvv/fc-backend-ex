@@ -34,8 +34,8 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 본인 직관 인증 모든 게시물 데이터 조회 (승,무,패, 승 승률, 무 승률, 패 승률, 추가하기)
-    @Operation(summary = "본인 직관 게시물 전체 조회 (일부 데이터)")
+    // 본인 직관 인증 모든 게시물 데이터 조회 (승,무,패)
+    @Operation(summary = "본인 직관 게시물 전체 조회 + 본인 승률")
     @GetMapping
     public ResponseEntity<PostGetAllResponse> getPosts(Authentication authentication) {
         Long loginId = currentUserProvider.getCurrentUserId(authentication);

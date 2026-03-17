@@ -136,16 +136,7 @@ public class PostService {
         }
         count = win + lose + draw;
 
-        // 승리 승률 구하기
-        float winRate = (float) win / (float) postAll.size();
-        float loseRate = (float) lose / (float) postAll.size();
-        float drawRate = (float) draw / (float) postAll.size();
-
-        winRate = Math.round(winRate * 10) / 10.0f;
-        loseRate = Math.round(loseRate * 10) / 10.0f;
-        drawRate = Math.round(drawRate * 10) / 10.0f;
-
-        return new PostGetAllResponse(list, win, lose, draw, count, winRate, loseRate, drawRate);
+        return new PostGetAllResponse(list, win, lose, draw, count);
 
     }
 
