@@ -7,6 +7,7 @@ import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -105,6 +106,7 @@ public class UserService {
      * 유저 닉네임 변경
      */
     @Transactional
+    @CacheEvict(value = "allPlayers", allEntries = true)
     public void updateNickname(Long Id, String newNickname) {
 
         if(badWordFiltering.check(newNickname)){

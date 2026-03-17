@@ -109,11 +109,11 @@ public class RedisConfig {
         // 캐시 이름별 TTL 설정
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-        // 직관왕 랭킹 attendanceRank 캐시 : 1분 뒤 만료
-        cacheConfigurations.put("attendanceRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+        // 직관왕 랭킹 attendanceRank 캐시 : 10분 뒤 만료
+        cacheConfigurations.put("attendanceRank", defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
-        // 승률왕 랭킹 winRateRank 캐시 : 1분 뒤 만료
-        cacheConfigurations.put("winRateRank", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+        // 승률왕 랭킹 winRateRank 캐시 : 10분 뒤 만료
+        cacheConfigurations.put("winRateRank", defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
         // 게스트용 경기 일정 조회 guestGames 캐시 : 1시간 뒤 만료
         cacheConfigurations.put("guestGames", defaultConfig.entryTtl(Duration.ofHours(1)));
