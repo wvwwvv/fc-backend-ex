@@ -24,7 +24,12 @@ public class CacheConfig {
     public enum CacheType {
         // 도네이션 포함한 선수 전체 정보 (30분, 최대 저장 개수 10개)
         // 최대 저장 개수 : key 의 종류 ex) 2025년, 2026년 두 allPlayers 정보를 캐시로 사용 : maximumSize 2 로 충분
-        ALL_PLAYERS("allPlayers", 1800, 10);
+        ALL_PLAYERS("allPlayers", 1800, 10),
+
+        //maximumSize 120 : 최대 10년간의 120개의 month 에 해당하는 key 생성 가능
+        GUEST_GAMES("guestGames", 1800, 120),
+        ATTENDANCE_RANK("attendanceRank", 180, 10),
+        WIN_RATE_RANK("winRateRank", 180, 10);
 
 
         private final String cacheName;

@@ -8,6 +8,7 @@ import com.fc.fcseoularchive.game.dto.GameResponse;
 import com.fc.fcseoularchive.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -223,6 +224,7 @@ public class GameService {
 
     // admin : 경기 추가
     @Transactional
+    @CacheEvict(value = "guestGames", allEntries = true)
     public void addGame(GameAdminRequest request) {
         Game game = Game.builder()
                 .date(request.getDate())
@@ -249,6 +251,7 @@ public class GameService {
 
     // admin : 경기 1개 정보 수정 (모든 필드 제어 가능)
     @Transactional
+    @CacheEvict(value = "guestGames", allEntries = true)
     public Game updateGame(Long gameId, GameAdminRequest request) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "존재하지 않는 경기입니다."));
@@ -271,6 +274,7 @@ public class GameService {
 
     // admin : 경기 삭제
     @Transactional
+    @CacheEvict(value = "guestGames", allEntries = true)
     public void deleteGame(Long gameId) {
         gameRepository.findById(gameId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "경기가 존재하지 않습니다."));
