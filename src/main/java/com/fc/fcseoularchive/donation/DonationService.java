@@ -46,12 +46,14 @@ public class DonationService {
 
         user.subtractPoints(point); // 포인트 차감 완료
 
-
+        // donation 에 user, player fetch join
+        // 여기선 user 의 point 도 사용해야 하기 때문에 fetch join 필요
+        // point 도 donation 에 반정규화 하는것은 과하다
         Optional<Donation> optDonation = donationRepository.findByUserIdAndPlayerId(userId, playerId);
 
         // 기존에 없다면 새롭게 생성 후 저장
         if(optDonation.isEmpty()){
-            Donation newDonation = new Donation(point, user, player);
+            Donation newDonation = new Donation(point, user, player, user.getNickname());
             donationRepository.save(newDonation);
             return;
         }

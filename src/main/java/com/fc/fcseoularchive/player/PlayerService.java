@@ -131,6 +131,7 @@ public class PlayerService {
      * getAllPlayersGK (현역 GK 선수 전체 조회 + 후원 랭킹)
      */
 
+    // donation 에 nickname 추가 - 반정규화
     // 선수 전체 조회 + 유저 랭킹
     // cacheEvict : 1. 선수에게 후원할 때, 2. 선수 정보가 수정(삭제)될 때
     @Cacheable(value = "allPlayers", key = "'2026'")
@@ -139,7 +140,7 @@ public class PlayerService {
         // 1. player 전부 가져오기 (현역 선수만!)
         List<Player> players = playerRepository.findByStatus(PlayerStatus.ACTIVE);
 
-        // 2. donation <-> 기준 user, player 모두 가져오기
+        // 2. donation <-> 기준 player 모두 가져오기
         List<Donation> donations = donationRepository.getDonationAll();
 
         // 3. player의 id 를 기준으로 그루핑 하기
@@ -262,7 +263,7 @@ public class PlayerService {
             if (i + 1 > donationList.size()) {
                 nicknameList.put(i + 1, "null");
             } else {
-                nicknameList.put(i + 1, donationList.get(i).getUser().getNickname());
+                nicknameList.put(i + 1, donationList.get(i).getNickname());
             }
         }
     }

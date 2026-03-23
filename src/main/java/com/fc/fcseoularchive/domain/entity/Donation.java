@@ -26,6 +26,10 @@ public class Donation {
     @JoinColumn(name = "player_id")
     private Player player;
 
+    // 반정규화 - donation 랭킹에 사용되는 nickname - fetch join 없이 바로 접근
+    @Column(nullable = false, length = 30, unique = true)
+    private String nickname;
+
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -33,10 +37,11 @@ public class Donation {
         createdAt = LocalDateTime.now();
     }
 
-    public Donation(Integer point, User user, Player player) {
+    public Donation(Integer point, User user, Player player, String nickname) {
         this.point = point;
         this.user = user;
         this.player = player;
+        this.nickname = nickname;
     }
 
     public void addPoint(Integer point) {
