@@ -2,6 +2,7 @@ spring:
   profiles:
     active: local
 
+#  ./gradlew bootRun --args='--server.port=8081'
   datasource:
     url: jdbc:mysql://localhost:3306/fcraichu?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ${DB_USER_NAME:root}
@@ -60,9 +61,9 @@ springdoc:
 # 프론트에서 code + verifier 받아서 Keycloak 으로 넘길 때 필요한 정보 (랠름에 따라 설정해줘야함!)
 keycloak:
   url: https://raichu.inwoohub.com/auth
-  realm: fcraichu
-  client-id: your-client
-  client-secret: your-secret
+  realm: test2-realm
+  client-id: test-client
+  client-secret: ruXjPmZqUhrF4AvlMysitJtb1oU4LB8c
 
 
 frontend:
