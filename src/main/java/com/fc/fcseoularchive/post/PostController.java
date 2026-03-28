@@ -1,9 +1,7 @@
 package com.fc.fcseoularchive.post;
 
-import com.fc.fcseoularchive.post.dto.PostCreateRequest;
-import com.fc.fcseoularchive.post.dto.PostResponse;
-import com.fc.fcseoularchive.post.dto.PostResponseDetail;
-import com.fc.fcseoularchive.post.dto.PostUpdateRequest;
+import com.fc.fcseoularchive.config.CurrentUserProvider;
+import com.fc.fcseoularchive.post.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,51 +23,37 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CurrentUserProvider currentUserProvider;
 
     // 직관 기록 작성
     @Operation(summary = "직관 기록 작성")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createPost(Authentication authentication, @Valid @ModelAttribute PostCreateRequest request) throws IOException {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
         postService.createPost(loginId, request);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 본인 직관 인증 모든 게시물 데이터 조회
-    @Operation(summary = "본인 직관 게시물 전체 조회 (일부 데이터)")
+    // 본인 직관 인증 모든 게시물 데이터 조회 (승,무,패)
+    @Operation(summary = "본인 직관 게시물 전체 조회 + 본인 승률")
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getPosts(Authentication authentication) {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
-        List<PostResponse> response = postService.getPosts(loginId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<PostGetAllResponse> getPosts(Authentication authentication) {
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts(loginId));
     }
 
     // 본인 직관 인증 게시물 상세 데이터 조회 : PostResponseDetail dto
     @Operation(summary = "본인 직관 게시물 1개 조회 (상세 데이터)")
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDetail> getPostDetail(Authentication authentication, @PathVariable Long postId) {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
-        PostResponseDetail response = postService.getPostDetail(postId, loginId);
-        return ResponseEntity.ok(response);
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostDetail(postId, loginId));
     }
 
     @Operation(summary = "본인 직관 게시물 1개 수정")
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePost(Authentication authentication, @Valid @ModelAttribute PostUpdateRequest request, @PathVariable Long postId) throws IOException {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
         postService.updatePost(postId, loginId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -77,12 +61,8 @@ public class PostController {
     @Operation(summary = "본인 직관 게시물 1개 삭제")
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(Authentication authentication, @PathVariable Long postId) {
-
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        Long loginId = Long.parseLong(jwt.getClaim("id"));
-
+        Long loginId = currentUserProvider.getCurrentUserId(authentication);
         postService.deletePost(postId, loginId);
-
         return ResponseEntity.noContent().build();
 
     }

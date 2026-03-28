@@ -1,6 +1,7 @@
 package com.fc.fcseoularchive.post;
 
 import com.fc.fcseoularchive.domain.entity.*;
+import com.fc.fcseoularchive.domain.enums.GameResult;
 import com.fc.fcseoularchive.image.ImageRepository;
 import com.fc.fcseoularchive.error.ApiException;
 import com.fc.fcseoularchive.game.GameRepository;
@@ -105,8 +106,13 @@ public class PostService {
 
     // user : 본인의 게시물 전부 조회
     @Transactional(readOnly = true)
-    public List<PostResponse> getPosts(Long loginId) { // 로그인 유저의 PK
-        return postRepository.findByUser_Id(loginId)
+    public PostGetAllResponse getPosts(Long loginId) { // 로그인 유저의 PK
+
+        // 내가 직관한 경기 post만 전부 가져오기
+        List<Post> postAll = postRepository.findByUser_Id(loginId);
+
+        // 기존꺼 그대로 사용
+        List<PostResponse> list = postAll
                 .stream()
                 .map(post -> {
                     PostResponse response = PostResponse.from(post);
@@ -115,6 +121,23 @@ public class PostService {
                     return response;
                 })
                 .toList();
+
+        // 승/무/패 구하기
+        int win = 0;
+        int lose = 0;
+        int draw = 0;
+        int count = 0;
+
+        // 승 무 패 필터걸기
+        for (Post post : postAll) {
+            if (post.getGame().getResult().equals(GameResult.W)) win++;
+            else if (post.getGame().getResult().equals(GameResult.L)) lose++;
+            else draw++;
+        }
+        count = win + lose + draw;
+
+        return new PostGetAllResponse(list, win, lose, draw, count);
+
     }
 
     // user : 본인의 게시물 1개 상세 조회
