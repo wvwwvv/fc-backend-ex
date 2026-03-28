@@ -72,7 +72,8 @@ public class SecurityConfig {
                                                 "/api/games/guest",
                                                 "/api/players/**",
                                                 "/api/rankings/**",
-                                                "/upload/**"
+                                                "/upload/**",
+                                                "/api/auth/**"
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
