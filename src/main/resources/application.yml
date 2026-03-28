@@ -57,6 +57,14 @@ springdoc:
     operations-sorter: alpha
 
 
+# 프론트에서 code + verifier 받아서 Keycloak 으로 넘길 때 필요한 정보 (랠름에 따라 설정해줘야함!)
+keycloak:
+  url: https://raichu.inwoohub.com/auth
+  realm: fcraichu
+  client-id: your-client
+  client-secret: your-secret
+
+
 # 시크릿 키는 : https://jwtsecretkeygenerator.com/ko/ 여기서 만듦
 #jwt:
 #  secret: ${SPRING_JWT_SECRET:CD9KEjLo1DkQB6EMWo8RZPl2i8XAxv4RLVNAC3dmdVf}
