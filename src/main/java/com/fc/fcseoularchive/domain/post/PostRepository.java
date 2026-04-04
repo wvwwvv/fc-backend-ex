@@ -1,9 +1,8 @@
-package com.fc.fcseoularchive.post;
+package com.fc.fcseoularchive.domain.post;
 
-import com.fc.fcseoularchive.domain.entity.Post;
-import com.fc.fcseoularchive.post.querydsl.PostRepositoryQueryDsl;
-import com.fc.fcseoularchive.rank.AttendanceRankRow;
-import com.fc.fcseoularchive.rank.WinRateRankRow;
+import com.fc.fcseoularchive.domain.post.querydsl.PostRepositoryQueryDsl;
+import com.fc.fcseoularchive.domain.rank.AttendanceRankRow;
+import com.fc.fcseoularchive.domain.rank.WinRateRankRow;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

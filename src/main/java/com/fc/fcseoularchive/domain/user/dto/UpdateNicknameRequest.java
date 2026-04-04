@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.user.dto;
+package com.fc.fcseoularchive.domain.user.dto;
 
 import lombok.Getter;
 

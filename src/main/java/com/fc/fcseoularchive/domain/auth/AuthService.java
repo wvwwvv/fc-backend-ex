@@ -1,10 +1,10 @@
-package com.fc.fcseoularchive.auth;
+package com.fc.fcseoularchive.domain.auth;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fc.fcseoularchive.auth.dto.TokenResponse;
-import com.fc.fcseoularchive.error.ApiException;
+import com.fc.fcseoularchive.domain.auth.dto.TokenResponse;
+import com.fc.fcseoularchive.global.error.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,6 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Base64;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor

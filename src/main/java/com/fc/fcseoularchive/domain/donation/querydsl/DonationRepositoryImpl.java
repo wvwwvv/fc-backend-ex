@@ -1,16 +1,17 @@
-package com.fc.fcseoularchive.donation.querydsl;
+package com.fc.fcseoularchive.domain.donation.querydsl;
 
 
-import com.fc.fcseoularchive.domain.entity.Donation;
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
+import com.fc.fcseoularchive.domain.donation.Donation;
+import com.fc.fcseoularchive.domain.player.PlayerPosition;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.fc.fcseoularchive.domain.entity.QDonation.*;
-import static com.fc.fcseoularchive.domain.entity.QPlayer.*;
-import static com.fc.fcseoularchive.domain.entity.QUser.*;
+import static com.fc.fcseoularchive.domain.donation.QDonation.donation;
+import static com.fc.fcseoularchive.domain.player.QPlayer.player;
+import static com.fc.fcseoularchive.domain.user.QUser.user;
+
 
 @RequiredArgsConstructor
 public class DonationRepositoryImpl implements DonationRepositoryQuerydsl{

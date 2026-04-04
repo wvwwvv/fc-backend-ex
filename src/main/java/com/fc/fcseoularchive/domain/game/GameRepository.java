@@ -1,7 +1,6 @@
-package com.fc.fcseoularchive.game;
+package com.fc.fcseoularchive.domain.game;
 
-import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.game.querydsl.GameRepositoryQueryDsl;
+import com.fc.fcseoularchive.domain.game.querydsl.GameRepositoryQueryDsl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.game.dto;
+package com.fc.fcseoularchive.domain.game.dto;
 
-import com.fc.fcseoularchive.domain.enums.GameResult;
+import com.fc.fcseoularchive.domain.game.GameResult;
 import lombok.Getter;
 import lombok.Setter;
 

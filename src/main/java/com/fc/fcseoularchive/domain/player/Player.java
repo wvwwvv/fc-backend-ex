@@ -1,7 +1,5 @@
-package com.fc.fcseoularchive.domain.entity;
+package com.fc.fcseoularchive.domain.player;
 
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
-import com.fc.fcseoularchive.domain.enums.PlayerStatus;
 import com.fc.fcseoularchive.domain.player.dto.CreatePlayerRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

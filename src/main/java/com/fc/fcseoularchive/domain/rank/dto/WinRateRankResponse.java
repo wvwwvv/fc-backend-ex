@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.rank.dto;
+package com.fc.fcseoularchive.domain.rank.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

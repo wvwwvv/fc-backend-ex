@@ -1,11 +1,11 @@
-package com.fc.fcseoularchive.auth;
+package com.fc.fcseoularchive.domain.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fc.fcseoularchive.auth.dto.AccessTokenResponse;
-import com.fc.fcseoularchive.auth.dto.CallbackRequest;
-import com.fc.fcseoularchive.auth.dto.TokenResponse;
-import com.fc.fcseoularchive.error.ApiException;
+import com.fc.fcseoularchive.domain.auth.dto.AccessTokenResponse;
+import com.fc.fcseoularchive.domain.auth.dto.CallbackRequest;
+import com.fc.fcseoularchive.domain.auth.dto.TokenResponse;
+import com.fc.fcseoularchive.global.error.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
-import java.util.Map;
 
 @Tag(name = "8. AuthController")
 @RestController

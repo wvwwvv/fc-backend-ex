@@ -1,7 +1,7 @@
-package com.fc.fcseoularchive.game.dto;
+package com.fc.fcseoularchive.domain.game.dto;
 
-import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.domain.enums.GameResult;
+import com.fc.fcseoularchive.domain.game.Game;
+import com.fc.fcseoularchive.domain.game.GameResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

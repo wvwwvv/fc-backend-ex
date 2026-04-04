@@ -1,11 +1,11 @@
-package com.fc.fcseoularchive.user;
+package com.fc.fcseoularchive.domain.user;
 
 
-import com.fc.fcseoularchive.config.badword.BadWordFiltering;
-import com.fc.fcseoularchive.domain.entity.User;
-import com.fc.fcseoularchive.domain.enums.Role;
-import com.fc.fcseoularchive.error.ApiException;
-import com.fc.fcseoularchive.user.dto.*;
+import com.fc.fcseoularchive.global.badword.BadWordFiltering;
+import com.fc.fcseoularchive.domain.user.dto.UserCreateRequest;
+import com.fc.fcseoularchive.domain.user.dto.UserResponse;
+import com.fc.fcseoularchive.domain.user.dto.UserResponseMe;
+import com.fc.fcseoularchive.global.error.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;

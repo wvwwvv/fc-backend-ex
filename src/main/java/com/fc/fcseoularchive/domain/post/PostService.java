@@ -1,12 +1,14 @@
-package com.fc.fcseoularchive.post;
+package com.fc.fcseoularchive.domain.post;
 
-import com.fc.fcseoularchive.domain.entity.*;
-import com.fc.fcseoularchive.domain.enums.GameResult;
-import com.fc.fcseoularchive.image.ImageRepository;
-import com.fc.fcseoularchive.error.ApiException;
-import com.fc.fcseoularchive.game.GameRepository;
-import com.fc.fcseoularchive.post.dto.*;
-import com.fc.fcseoularchive.user.UserRepository;
+import com.fc.fcseoularchive.domain.game.GameResult;
+import com.fc.fcseoularchive.domain.game.Game;
+import com.fc.fcseoularchive.domain.image.Image;
+import com.fc.fcseoularchive.domain.post.dto.*;
+import com.fc.fcseoularchive.domain.image.ImageRepository;
+import com.fc.fcseoularchive.global.error.ApiException;
+import com.fc.fcseoularchive.domain.game.GameRepository;
+import com.fc.fcseoularchive.domain.user.User;
+import com.fc.fcseoularchive.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;

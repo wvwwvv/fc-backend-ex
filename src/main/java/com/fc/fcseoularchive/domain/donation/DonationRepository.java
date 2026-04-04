@@ -1,14 +1,12 @@
-package com.fc.fcseoularchive.donation;
+package com.fc.fcseoularchive.domain.donation;
 
 
-import com.fc.fcseoularchive.domain.entity.Donation;
-import com.fc.fcseoularchive.donation.querydsl.DonationRepositoryQuerydsl;
+import com.fc.fcseoularchive.domain.donation.querydsl.DonationRepositoryQuerydsl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

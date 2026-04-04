@@ -1,7 +1,7 @@
-package com.fc.fcseoularchive.game;
+package com.fc.fcseoularchive.domain.game;
 
-import com.fc.fcseoularchive.config.CurrentUserProvider;
-import com.fc.fcseoularchive.game.dto.GameResponse;
+import com.fc.fcseoularchive.security.CurrentUserProvider;
+import com.fc.fcseoularchive.domain.game.dto.GameResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.domain.enums;
+package com.fc.fcseoularchive.domain.user;
 
 public enum Role {
     USER,

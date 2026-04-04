@@ -28,7 +28,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://raichu.inwoohub.com/auth/realms/test2-realm
+          issuer-uri: https://fcraichu.inwoohub.com/auth/realms/fcraichu
 #          issuer-uri: https://raichu.inwoohub.com/auth/realms/fcraichu
 #          issuer-uri: http://localhost:8080/realms/fcraichu
 
@@ -61,10 +61,10 @@ springdoc:
 
 # 프론트에서 code + verifier 받아서 Keycloak 으로 넘길 때 필요한 정보 (랠름에 따라 설정해줘야함!)
 keycloak:
-  url: https://raichu.inwoohub.com/auth
-  realm: test2-realm
-  client-id: test-client
-  client-secret: ruXjPmZqUhrF4AvlMysitJtb1oU4LB8c
+  url: https://fcraichu.inwoohub.com/auth
+  realm: fcraichu
+  client-id: react
+  client-secret: kAykNzrjgNyRR3tPtCoTmzthOAAGlQhh
 
 
 frontend:

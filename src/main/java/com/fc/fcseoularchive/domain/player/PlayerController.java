@@ -1,7 +1,7 @@
-package com.fc.fcseoularchive.player;
+package com.fc.fcseoularchive.domain.player;
 
-import com.fc.fcseoularchive.player.dto.PlayerResponse;
-import com.fc.fcseoularchive.player.dto.PlayerResponseRank;
+import com.fc.fcseoularchive.domain.player.dto.PlayerResponse;
+import com.fc.fcseoularchive.domain.player.dto.PlayerResponseRank;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

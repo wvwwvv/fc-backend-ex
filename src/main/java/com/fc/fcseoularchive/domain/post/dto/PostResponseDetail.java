@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.post.dto;
+package com.fc.fcseoularchive.domain.post.dto;
 
-import com.fc.fcseoularchive.domain.entity.Post;
+import com.fc.fcseoularchive.domain.post.Post;
 import lombok.Getter;
 import lombok.Setter;
 

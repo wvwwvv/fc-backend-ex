@@ -1,7 +1,7 @@
 
-package com.fc.fcseoularchive.user.querydsl;
+package com.fc.fcseoularchive.domain.user.querydsl;
 
-import com.fc.fcseoularchive.domain.entity.User;
+import com.fc.fcseoularchive.domain.user.User;
 
 import java.util.List;
 import java.util.Optional;

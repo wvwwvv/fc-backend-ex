@@ -1,7 +1,7 @@
-package com.fc.fcseoularchive.admin;
+package com.fc.fcseoularchive.domain.admin;
 
-import com.fc.fcseoularchive.config.CurrentUserProvider;
-import com.fc.fcseoularchive.error.ApiException;
+import com.fc.fcseoularchive.security.CurrentUserProvider;
+import com.fc.fcseoularchive.global.error.ApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

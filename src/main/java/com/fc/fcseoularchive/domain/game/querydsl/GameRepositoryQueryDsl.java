@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.game.querydsl;
+package com.fc.fcseoularchive.domain.game.querydsl;
 
-import com.fc.fcseoularchive.domain.entity.Game;
+import com.fc.fcseoularchive.domain.game.Game;
 
 import java.util.List;
 

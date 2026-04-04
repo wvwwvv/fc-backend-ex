@@ -1,7 +1,8 @@
-package com.fc.fcseoularchive.user.querydsl;
+package com.fc.fcseoularchive.domain.user.querydsl;
 
 
-import com.fc.fcseoularchive.domain.entity.User;
+import com.fc.fcseoularchive.domain.user.QUser;
+import com.fc.fcseoularchive.domain.user.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.fc.fcseoularchive.domain.entity.QUser.user;
+import static com.fc.fcseoularchive.domain.user.QUser.*;
 
 
 /**

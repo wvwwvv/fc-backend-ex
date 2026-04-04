@@ -1,9 +1,9 @@
-package com.fc.fcseoularchive.player.dto;
+package com.fc.fcseoularchive.domain.player.dto;
 
 
-import com.fc.fcseoularchive.domain.entity.Player;
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
-import com.fc.fcseoularchive.domain.enums.PlayerStatus;
+import com.fc.fcseoularchive.domain.player.Player;
+import com.fc.fcseoularchive.domain.player.PlayerPosition;
+import com.fc.fcseoularchive.domain.player.PlayerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

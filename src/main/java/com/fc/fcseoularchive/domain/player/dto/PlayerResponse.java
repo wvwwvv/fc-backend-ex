@@ -1,7 +1,7 @@
-package com.fc.fcseoularchive.player.dto;
+package com.fc.fcseoularchive.domain.player.dto;
 
-import com.fc.fcseoularchive.domain.entity.Player;
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
+import com.fc.fcseoularchive.domain.player.Player;
+import com.fc.fcseoularchive.domain.player.PlayerPosition;
 import lombok.Getter;
 
 @Getter

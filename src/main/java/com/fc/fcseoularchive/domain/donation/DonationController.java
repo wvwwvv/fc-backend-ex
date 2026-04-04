@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.donation;
+package com.fc.fcseoularchive.domain.donation;
 
-import com.fc.fcseoularchive.config.CurrentUserProvider;
+import com.fc.fcseoularchive.security.CurrentUserProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

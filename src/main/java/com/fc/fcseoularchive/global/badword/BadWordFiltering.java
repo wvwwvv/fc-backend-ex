@@ -1,8 +1,5 @@
-package com.fc.fcseoularchive.config.badword;
+package com.fc.fcseoularchive.global.badword;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.regex.Pattern;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;

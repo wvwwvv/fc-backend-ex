@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.domain.enums;
+package com.fc.fcseoularchive.domain.player;
 
 public enum PlayerPosition {
     FW,

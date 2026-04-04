@@ -1,8 +1,10 @@
-package com.fc.fcseoularchive.user;
+package com.fc.fcseoularchive.domain.user;
 
 
-import com.fc.fcseoularchive.config.CurrentUserProvider;
-import com.fc.fcseoularchive.user.dto.*;
+import com.fc.fcseoularchive.security.CurrentUserProvider;
+import com.fc.fcseoularchive.domain.user.dto.UpdateNicknameRequest;
+import com.fc.fcseoularchive.domain.user.dto.UserCreateRequest;
+import com.fc.fcseoularchive.domain.user.dto.UserResponseMe;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

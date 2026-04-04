@@ -1,6 +1,6 @@
-package com.fc.fcseoularchive.donation.querydsl;
+package com.fc.fcseoularchive.domain.donation.querydsl;
 
-import com.fc.fcseoularchive.domain.entity.Donation;
+import com.fc.fcseoularchive.domain.donation.Donation;
 
 import java.util.List;
 

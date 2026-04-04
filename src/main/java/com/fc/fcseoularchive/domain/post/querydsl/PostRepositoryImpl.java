@@ -1,18 +1,19 @@
-package com.fc.fcseoularchive.post.querydsl;
+package com.fc.fcseoularchive.domain.post.querydsl;
 
-import com.fc.fcseoularchive.domain.entity.Post;
-import com.fc.fcseoularchive.domain.entity.QGame;
-import com.fc.fcseoularchive.domain.entity.QPost;
-import com.fc.fcseoularchive.domain.entity.QUser;
+import com.fc.fcseoularchive.domain.game.QGame;
+import com.fc.fcseoularchive.domain.post.Post;
+import com.fc.fcseoularchive.domain.post.QPost;
+import com.fc.fcseoularchive.domain.user.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.fc.fcseoularchive.domain.entity.QGame.*;
-import static com.fc.fcseoularchive.domain.entity.QPost.*;
-import static com.fc.fcseoularchive.domain.entity.QUser.*;
+import static com.fc.fcseoularchive.domain.game.QGame.*;
+import static com.fc.fcseoularchive.domain.post.QPost.*;
+import static com.fc.fcseoularchive.domain.user.QUser.*;
+
 
 @RequiredArgsConstructor
 @Repository
@@ -22,10 +23,6 @@ public class PostRepositoryImpl implements PostRepositoryQueryDsl {
 
     @Override
     public boolean existsByUserIdAndGameId(String userId, Long gameId) {
-        QPost post = QPost.post;
-        QUser user = QUser.user;
-        QGame game = QGame.game;
-
         return jpaQueryFactory
                 .selectOne()
                 .from(post)
@@ -40,10 +37,6 @@ public class PostRepositoryImpl implements PostRepositoryQueryDsl {
 
     @Override
     public List<Post> findByUser_Id(String userId) {
-        QPost post = QPost.post;
-        QUser user = QUser.user;
-        QGame game = QGame.game;
-
         return jpaQueryFactory
                 .selectFrom(post)
                 .distinct()

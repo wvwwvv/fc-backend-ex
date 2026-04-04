@@ -1,6 +1,5 @@
-package com.fc.fcseoularchive.image;
+package com.fc.fcseoularchive.domain.image;
 
-import com.fc.fcseoularchive.domain.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

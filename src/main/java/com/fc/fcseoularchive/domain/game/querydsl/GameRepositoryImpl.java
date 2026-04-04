@@ -1,14 +1,15 @@
-package com.fc.fcseoularchive.game.querydsl;
+package com.fc.fcseoularchive.domain.game.querydsl;
 
-import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.domain.entity.QGame;
+import com.fc.fcseoularchive.domain.game.Game;
+import com.fc.fcseoularchive.domain.game.QGame;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.fc.fcseoularchive.domain.entity.QGame.*;
+import static com.fc.fcseoularchive.domain.game.QGame.game;
+
 
 @RequiredArgsConstructor
 public class GameRepositoryImpl implements GameRepositoryQueryDsl {

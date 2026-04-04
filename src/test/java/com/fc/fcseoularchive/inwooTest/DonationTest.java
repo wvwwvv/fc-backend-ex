@@ -1,7 +1,7 @@
 //package com.fc.fcseoularchive.inwooTest;
 //
-//import com.fc.fcseoularchive.domain.entity.Donation;
-//import com.fc.fcseoularchive.domain.entity.Player;
+//import com.fc.fcseoularchive.domain.donation.Donation;
+//import com.fc.fcseoularchive.domain.player.Player;
 //import com.fc.fcseoularchive.donation.DonationRepository;
 //import com.fc.fcseoularchive.player.PlayerRepository;
 //import org.hibernate.validator.internal.constraintvalidators.bv.time.future.FutureValidatorForInstant;

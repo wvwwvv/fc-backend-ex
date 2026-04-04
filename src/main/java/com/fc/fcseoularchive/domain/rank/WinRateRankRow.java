@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.rank;
+package com.fc.fcseoularchive.domain.rank;
 
 // Projection 에 사용되는 interface
 public interface WinRateRankRow {

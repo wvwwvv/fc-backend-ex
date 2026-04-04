@@ -1,15 +1,15 @@
-package com.fc.fcseoularchive.admin;
+package com.fc.fcseoularchive.domain.admin;
 
-import com.fc.fcseoularchive.domain.entity.Game;
-import com.fc.fcseoularchive.game.dto.GameAdminRequest;
-import com.fc.fcseoularchive.game.GameService;
-import com.fc.fcseoularchive.player.PlayerService;
-import com.fc.fcseoularchive.player.dto.CreatePlayerRequest;
-import com.fc.fcseoularchive.player.dto.UpdatePlayerReqeust;
-import com.fc.fcseoularchive.post.dto.PostAdminResponse;
-import com.fc.fcseoularchive.post.PostService;
-import com.fc.fcseoularchive.user.dto.UserResponse;
-import com.fc.fcseoularchive.user.UserService;
+import com.fc.fcseoularchive.domain.game.Game;
+import com.fc.fcseoularchive.domain.game.dto.GameAdminRequest;
+import com.fc.fcseoularchive.domain.game.GameService;
+import com.fc.fcseoularchive.domain.player.PlayerService;
+import com.fc.fcseoularchive.domain.player.dto.CreatePlayerRequest;
+import com.fc.fcseoularchive.domain.player.dto.UpdatePlayerReqeust;
+import com.fc.fcseoularchive.domain.post.dto.PostAdminResponse;
+import com.fc.fcseoularchive.domain.post.PostService;
+import com.fc.fcseoularchive.domain.user.dto.UserResponse;
+import com.fc.fcseoularchive.domain.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

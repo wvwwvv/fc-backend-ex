@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.config.badword;
+package com.fc.fcseoularchive.global.badword;
 
 import java.io.BufferedReader;
 import java.io.File;

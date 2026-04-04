@@ -2,8 +2,8 @@
 //
 //import com.fc.fcseoularchive.config.jwt.JwtToken;
 //
-//import com.fc.fcseoularchive.domain.entity.User;
-//import com.fc.fcseoularchive.domain.enums.Role;
+//import com.fc.fcseoularchive.domain.user.User;
+//import com.fc.fcseoularchive.domain.user.Role;
 //import lombok.Getter;
 //
 //

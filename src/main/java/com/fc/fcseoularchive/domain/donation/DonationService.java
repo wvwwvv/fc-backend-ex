@@ -1,11 +1,10 @@
-package com.fc.fcseoularchive.donation;
+package com.fc.fcseoularchive.domain.donation;
 
-import com.fc.fcseoularchive.domain.entity.Donation;
-import com.fc.fcseoularchive.domain.entity.Player;
-import com.fc.fcseoularchive.domain.entity.User;
-import com.fc.fcseoularchive.error.ApiException;
-import com.fc.fcseoularchive.player.PlayerRepository;
-import com.fc.fcseoularchive.user.UserRepository;
+import com.fc.fcseoularchive.domain.player.Player;
+import com.fc.fcseoularchive.domain.user.User;
+import com.fc.fcseoularchive.global.error.ApiException;
+import com.fc.fcseoularchive.domain.player.PlayerRepository;
+import com.fc.fcseoularchive.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;

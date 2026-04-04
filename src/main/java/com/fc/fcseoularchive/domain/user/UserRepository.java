@@ -1,8 +1,7 @@
-package com.fc.fcseoularchive.user;
+package com.fc.fcseoularchive.domain.user;
 
 
-import com.fc.fcseoularchive.domain.entity.User;
-import com.fc.fcseoularchive.user.querydsl.UserRepositoryQuerydsl;
+import com.fc.fcseoularchive.domain.user.querydsl.UserRepositoryQuerydsl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

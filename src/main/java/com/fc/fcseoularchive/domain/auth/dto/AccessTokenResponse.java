@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.auth.dto;
+package com.fc.fcseoularchive.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

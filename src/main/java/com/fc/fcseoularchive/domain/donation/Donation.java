@@ -1,5 +1,7 @@
-package com.fc.fcseoularchive.domain.entity;
+package com.fc.fcseoularchive.domain.donation;
 
+import com.fc.fcseoularchive.domain.player.Player;
+import com.fc.fcseoularchive.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

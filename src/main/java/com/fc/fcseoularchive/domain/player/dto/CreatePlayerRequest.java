@@ -1,8 +1,8 @@
-package com.fc.fcseoularchive.player.dto;
+package com.fc.fcseoularchive.domain.player.dto;
 
 
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
-import com.fc.fcseoularchive.domain.enums.PlayerStatus;
+import com.fc.fcseoularchive.domain.player.PlayerPosition;
+import com.fc.fcseoularchive.domain.player.PlayerStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

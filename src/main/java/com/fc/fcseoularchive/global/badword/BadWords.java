@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.config.badword;
+package com.fc.fcseoularchive.global.badword;
 
 interface BadWords {
     String[] koreaWord1 = {

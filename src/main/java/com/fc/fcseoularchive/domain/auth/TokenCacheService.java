@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.auth;
+package com.fc.fcseoularchive.domain.auth;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;

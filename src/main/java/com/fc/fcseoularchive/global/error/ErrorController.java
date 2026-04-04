@@ -1,4 +1,4 @@
-package com.fc.fcseoularchive.config.error;
+package com.fc.fcseoularchive.global.error;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

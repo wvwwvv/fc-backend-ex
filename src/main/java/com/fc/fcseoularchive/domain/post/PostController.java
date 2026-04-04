@@ -1,10 +1,10 @@
-package com.fc.fcseoularchive.post;
+package com.fc.fcseoularchive.domain.post;
 
-import com.fc.fcseoularchive.config.CurrentUserProvider;
-import com.fc.fcseoularchive.post.dto.PostCreateRequest;
-import com.fc.fcseoularchive.post.dto.PostGetAllResponse;
-import com.fc.fcseoularchive.post.dto.PostResponseDetail;
-import com.fc.fcseoularchive.post.dto.PostUpdateRequest;
+import com.fc.fcseoularchive.security.CurrentUserProvider;
+import com.fc.fcseoularchive.domain.post.dto.PostCreateRequest;
+import com.fc.fcseoularchive.domain.post.dto.PostGetAllResponse;
+import com.fc.fcseoularchive.domain.post.dto.PostResponseDetail;
+import com.fc.fcseoularchive.domain.post.dto.PostUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

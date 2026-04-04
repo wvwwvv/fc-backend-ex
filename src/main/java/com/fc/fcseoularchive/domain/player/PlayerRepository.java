@@ -1,8 +1,5 @@
-package com.fc.fcseoularchive.player;
+package com.fc.fcseoularchive.domain.player;
 
-import com.fc.fcseoularchive.domain.entity.Player;
-import com.fc.fcseoularchive.domain.enums.PlayerPosition;
-import com.fc.fcseoularchive.domain.enums.PlayerStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
