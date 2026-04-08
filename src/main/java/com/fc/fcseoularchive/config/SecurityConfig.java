@@ -73,7 +73,8 @@ public class SecurityConfig {
                                                 "/api/players/**",
                                                 "/api/rankings/**",
                                                 "/upload/**",
-                                                "/actuator/**"
+                                                "/actuator/**",
+                                                "/api/auth/**"
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
@@ -145,14 +146,18 @@ public class SecurityConfig {
         public Collection<GrantedAuthority> convert(Jwt jwt) {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-            // 클레임에서 "role" 꺼내기
-            String role = jwt.getClaim("role");
-            if (role == null) {
-                // 없다면 바로 반환
+            List<String> roles = jwt.getClaimAsStringList("role");
+
+            if(roles == null){
                 return authorities;
-            } else {
-                // 있다면 권한 리스트에 추가해주기
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+            }
+
+            if(roles.contains("ADMIN")){
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
+
+            if(roles.contains("USER")) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
 
             return authorities;

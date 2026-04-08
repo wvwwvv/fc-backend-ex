@@ -29,7 +29,10 @@ public class CacheConfig {
         //maximumSize 120 : 최대 10년간의 120개의 month 에 해당하는 key 생성 가능
         GUEST_GAMES("guestGames", 1800, 120),
         ATTENDANCE_RANK("attendanceRank", 180, 10),
-        WIN_RATE_RANK("winRateRank", 180, 10);
+        WIN_RATE_RANK("winRateRank", 180, 10),
+
+        // 리프레시 토큰용도 추가 (1시간 = 3600초, 최대 유저 10000명)
+        REFRESH_TOKENS("refreshTokens", 3600, 10_000);
 
 
         private final String cacheName;
