@@ -46,7 +46,7 @@ public class BetController {
         return ResponseEntity.ok(response);
     }
 
-    /*@Operation(summary = "베팅 하기")
+    @Operation(summary = "베팅 하기")
     @PostMapping
     public ResponseEntity<Void> createBet(Authentication authentication, @Valid BetCreateRequest request) {
 
@@ -54,5 +54,5 @@ public class BetController {
         betService.createBet(loginId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }*/
+    }
 }
