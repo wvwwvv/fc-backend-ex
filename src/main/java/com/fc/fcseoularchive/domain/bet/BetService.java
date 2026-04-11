@@ -1,9 +1,6 @@
 package com.fc.fcseoularchive.domain.bet;
 
-import com.fc.fcseoularchive.domain.bet.dto.BetCreateRequest;
-import com.fc.fcseoularchive.domain.bet.dto.BetHistoryResponse;
-import com.fc.fcseoularchive.domain.bet.dto.BetResponse;
-import com.fc.fcseoularchive.domain.bet.dto.BetSummaryResponse;
+import com.fc.fcseoularchive.domain.bet.dto.*;
 import com.fc.fcseoularchive.domain.game.Game;
 import com.fc.fcseoularchive.domain.game.GameRepository;
 import com.fc.fcseoularchive.domain.user.User;
@@ -62,8 +59,8 @@ public class BetService {
     public BetResponse getBet(String loginId) {
 
         //LocalDateTime now = LocalDateTime.now();
-        //LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
-        LocalDateTime now = LocalDateTime.of(2028, 3, 17, 13, 0, 0); // 베팅 경기 없는 테스트용
+        LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
+        //LocalDateTime now = LocalDateTime.of(2028, 3, 17, 13, 0, 0); // 베팅 경기 없는 테스트용
 
         BetResponse response = new BetResponse();
 
@@ -192,6 +189,7 @@ public class BetService {
 
             // 기본 정보
             response.setBetId(bet.getId());
+            response.setBetHistoryId(betHistory.getId());
             response.setGameId(game.getId());
 
             String opponent = game.getHomeTeam().equals("FC서울") ? game.getAwayTeam() : game.getHomeTeam();
@@ -215,7 +213,37 @@ public class BetService {
         }
 
         return responses;
+    }
+
+    // 정산 완료지만, 확인하지 않은 배팅 내역 반환
+    public List<UnreadBetResultResponse> getUnreadBetResult(String loginId) {
+        return betHistoryRepository.getUnreadBetResults(loginId);
+    }
+
+    // isChecked -> true
+    @Transactional
+    public void checkUnreadBetResult(String loginId, BetHistoryIdsRequest request) {
+
+        // loginId, betHistoryIds 조합으로 된 betHistory 의 isChecked 를 true 로 수정
+        for (Long betHistoryId : request.getBetHistoryIds()) {
+            BetHistory betHistory = betHistoryRepository.findById(betHistoryId)
+                    .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "404", "NOT_FOUND", "betHistory를 찾을 수 없습니다."));
 
 
+            // 본인 데이터만 처리 가능
+            if (!betHistory.getUser().getId().equals(loginId)) {
+                throw new ApiException(HttpStatus.FORBIDDEN, "403", "FORBIDDEN", "본인의 betHistory만 확인 처리할 수 있습니다. betHistoryId=" + betHistoryId);
+            }
+
+            // 정산 완료 건만 확인 처리 가능
+            if (!betHistory.isSettled()) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "400", "BAD_REQUEST", "정산되지 않은 betHistory는 확인 처리할 수 없습니다. betHistoryId=" + betHistoryId);
+            }
+
+            // 미확인 상태일 때만 체크
+            if (!betHistory.isChecked()) {
+                betHistory.markAsChecked();
+            }
+        }
     }
 }

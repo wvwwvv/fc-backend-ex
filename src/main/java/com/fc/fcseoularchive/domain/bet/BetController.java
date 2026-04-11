@@ -1,22 +1,15 @@
 package com.fc.fcseoularchive.domain.bet;
 
-import com.fc.fcseoularchive.domain.bet.dto.BetCreateRequest;
-import com.fc.fcseoularchive.domain.bet.dto.BetHistoryResponse;
-import com.fc.fcseoularchive.domain.bet.dto.BetResponse;
-import com.fc.fcseoularchive.domain.bet.dto.BetSummaryResponse;
+import com.fc.fcseoularchive.domain.bet.dto.*;
 import com.fc.fcseoularchive.security.CurrentUserProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,5 +60,26 @@ public class BetController {
         List<BetHistoryResponse> response = betService.getBetHistory(loginId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "확인하지 않은 베팅 정산 결과 - 로그인 후 호출")
+    @GetMapping("unread")
+    public ResponseEntity<List<UnreadBetResultResponse>> getUnreadBetResult(Authentication authentication) {
+
+        String loginId = currentUserProvider.getCurrentUserId(authentication);
+        List<UnreadBetResultResponse> response = betService.getUnreadBetResult(loginId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "확인하지 않은 베팅 정산 결과 -> 확인 했음으로 변경")
+    @PutMapping("/unread/check")
+    public ResponseEntity<Void> checkUnreadBetResult(Authentication authentication, @RequestBody BetHistoryIdsRequest request) {
+
+        String loginId = currentUserProvider.getCurrentUserId(authentication);
+        betService.checkUnreadBetResult(loginId, request);
+
+        // 204 ok
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
