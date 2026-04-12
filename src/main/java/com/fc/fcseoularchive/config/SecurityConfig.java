@@ -78,7 +78,7 @@ public class SecurityConfig {
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
-//                                                , "/**"
+                                                , "/**"
 
                                         ).permitAll()
 
@@ -117,7 +117,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://raichu.inwoohub.com", "https://fc-raichu.vercel.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://raichu.inwoohub.com", "https://fc-raichu.vercel.app", "https://fcraichu.inwoohub.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
