@@ -2,6 +2,7 @@ package com.fc.fcseoularchive.domain.player;
 
 import com.fc.fcseoularchive.domain.donation.Donation;
 import com.fc.fcseoularchive.domain.donation.DonationRepository;
+import com.fc.fcseoularchive.domain.image.ImageCompressionService;
 import com.fc.fcseoularchive.global.error.ApiException;
 import com.fc.fcseoularchive.domain.player.dto.CreatePlayerRequest;
 import com.fc.fcseoularchive.domain.player.dto.PlayerResponse;
@@ -13,8 +14,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final DonationRepository donationRepository;
+    private final ImageCompressionService imageCompressionService;
 
     private final String uploadDir = System.getProperty("user.dir") + "/upload/player";
 
@@ -33,6 +37,9 @@ public class PlayerService {
     @Transactional
     @CacheEvict(value = "allPlayers", allEntries = true)
     public void createPlayer(CreatePlayerRequest req) throws IOException {
+
+
+        byte[] compressed = imageCompressionService.compress(req.getImage());
 
         // 업로드 폴더 없으면 폴더 생성
         File dir = new File(uploadDir);
@@ -45,7 +52,12 @@ public class PlayerService {
         if (req.getImage() != null && !req.getImage().isEmpty()) {
             String fileName = UUID.randomUUID() + "_" + req.getImage().getOriginalFilename(); // UUID_파일 이름으로 파일 이름 지정해주기
             File dest = new File(uploadDir, fileName); // 경로/fileName 으로 파일 만듦
-            req.getImage().transferTo(dest); // 실제 파일 저장해두기
+//            req.getImage().transferTo(dest); // 실제 파일 저장해두기
+            // 기존 원본 -> 이미지 컴프레션 적용한것으로 저장
+            try (FileOutputStream fos = new FileOutputStream(dest)) {
+                fos.write(compressed);
+            }
+
             imagePath = "/upload/player/" + fileName; // 이렇게 해야 db에 저장을 상대경로로 저장해서 프론트에서 바로 사용 가능함 !
         }
 

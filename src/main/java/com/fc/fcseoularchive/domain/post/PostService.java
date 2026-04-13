@@ -3,6 +3,7 @@ package com.fc.fcseoularchive.domain.post;
 import com.fc.fcseoularchive.domain.game.GameResult;
 import com.fc.fcseoularchive.domain.game.Game;
 import com.fc.fcseoularchive.domain.image.Image;
+import com.fc.fcseoularchive.domain.image.ImageCompressionService;
 import com.fc.fcseoularchive.domain.post.dto.*;
 import com.fc.fcseoularchive.domain.image.ImageRepository;
 import com.fc.fcseoularchive.global.error.ApiException;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final ImageCompressionService imageCompressionService;
 
     private final String uploadDir = System.getProperty("user.dir") + "/upload/post";
 
@@ -85,8 +88,16 @@ public class PostService {
                 if (rawFileName == null || rawFileName.isBlank()) continue;
 
                 String fileName = UUID.randomUUID() + "_" + rawFileName;
+
+//                file.transferTo(destination);
+
+                // 이미지 컴프레션으로 저장
                 File destination = new File(uploadDir, fileName);
-                file.transferTo(destination);
+                byte[] compressed = imageCompressionService.compress(file);
+                try (FileOutputStream fos = new FileOutputStream(destination)) {
+                    fos.write(compressed);
+                }
+
 
                 String imagePath = "/upload/post/" + fileName;
 
@@ -224,8 +235,12 @@ public class PostService {
                 if (rawFileName == null || rawFileName.isBlank()) continue;
 
                 String fileName = UUID.randomUUID() + "_" + rawFileName;
+//                file.transferTo(destination);
                 File destination = new File(uploadDir, fileName);
-                file.transferTo(destination);
+                byte[] compressed = imageCompressionService.compress(file);
+                try (FileOutputStream fos = new FileOutputStream(destination)) {
+                    fos.write(compressed);
+                }
 
                 String imagePath = "/upload/post/" + fileName;
 
