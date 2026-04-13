@@ -8,12 +8,13 @@ import com.fc.fcseoularchive.domain.user.User;
 import com.fc.fcseoularchive.domain.user.UserRepository;
 import com.fc.fcseoularchive.global.error.ApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class BetService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
 
+    @Cacheable(value = "betSummary", key = "#loginId")
     public BetSummaryResponse getBetSummary(String loginId) {
         // loginId로 bet_history 에서 찾기
 
@@ -57,10 +59,11 @@ public class BetService {
     }
 
     // 현재 베팅중인 경기 정보
+    @Cacheable(value = "betGame", key = "#loginId")
     public BetResponse getBet(String loginId) {
 
-        //LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
         //LocalDateTime now = LocalDateTime.of(2028, 3, 17, 13, 0, 0); // 베팅 경기 없는 테스트용
 
         BetResponse response = new BetResponse();
@@ -111,10 +114,11 @@ public class BetService {
 
     // 베팅 하기 - bet, betHistory 수정 필요
     @Transactional
+    @CacheEvict(value = "betGame", allEntries = true)
     public void createBet(String loginId, BetCreateRequest request) {
 
-        //LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
         //LocalDateTime now = LocalDateTime.of(2028, 3, 17, 13, 0, 0); // 베팅 경기 없는 테스트용
 
         // 애초에 베팅중인 경기가 없으면 베팅이 불가능
@@ -195,9 +199,10 @@ public class BetService {
 
     // 과거 경기 기준 내 베팅 이력 조회
     // DTO projection
+    @Cacheable(value = "betHistory", key = "#loginId")
     public List<BetHistoryResponse> getBetHistory(String loginId) {
-        //LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime now = LocalDateTime.of(2026, 3, 17, 13, 0, 0); // 베팅 gameId=3 테스트용
         //LocalDateTime now = LocalDateTime.of(2028, 3, 17, 13, 0, 0); // 베팅 경기 없는 테스트용
 
         return betHistoryRepository.getBetHistory(loginId, now);
@@ -287,10 +292,6 @@ public class BetService {
             // payoutPoint 갱신
             // isSettled = true, isChecked = false
             betHistory.settle(payoutPoint);
-
-
         }
-
-
     }
 }
