@@ -31,6 +31,10 @@ public class CacheConfig {
         ATTENDANCE_RANK("attendanceRank", 180, 10),
         WIN_RATE_RANK("winRateRank", 180, 10),
 
+        BET_GAME("betGame",1800,10000), // 베팅 중인 게임
+        BET_HISTORY("betHistory", 1800, 10000), // 지난 베팅 기록
+        BET_SUMMARY("betSummary", 1800, 10000), // 지난 베팅 기록 요약
+
         // 리프레시 토큰용도 추가 (1시간 = 3600초, 최대 유저 10000명)
         REFRESH_TOKENS("refreshTokens", 3600, 10_000);
 

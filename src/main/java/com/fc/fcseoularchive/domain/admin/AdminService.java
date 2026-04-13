@@ -4,6 +4,8 @@ import com.fc.fcseoularchive.domain.bet.BetService;
 import com.fc.fcseoularchive.domain.game.GameService;
 import com.fc.fcseoularchive.domain.game.dto.GameAdminResultRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,11 @@ public class AdminService {
 
     // admin : 경기 입력과 정산 동시에
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "betGame", allEntries = true),
+            @CacheEvict(value = "betHistory", allEntries = true),
+            @CacheEvict(value = "betSummary", allEntries = true)
+    })
     public void updateGameAndSettle(Long gameId, GameAdminResultRequest request) {
 
         // 경기 결과 입력
