@@ -1,5 +1,7 @@
 package com.fc.fcseoularchive.domain.game;
 
+import com.fc.fcseoularchive.domain.bet.Bet;
+import com.fc.fcseoularchive.domain.bet.BetRepository;
 import com.fc.fcseoularchive.domain.game.dto.GameAdminResultRequest;
 import com.fc.fcseoularchive.domain.post.Post;
 import com.fc.fcseoularchive.global.error.ApiException;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +29,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final PostRepository postRepository;
+    private final BetRepository betRepository;
 
 
     // 경기 조회 (년, 월 필터링 param 은 nullable) - 로그인 유저만 가능
@@ -159,6 +163,10 @@ public class GameService {
 
         // created_at, updated_at 은 onCreated 로 자동 적용
         gameRepository.save(game);
+
+        // game 의 id를 fk로 가지는 bet 추가
+        Bet bet = new Bet(game);
+        betRepository.save(bet);
     }
 
     // admin : 경기 정보 1개 가져 오기

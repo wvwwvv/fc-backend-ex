@@ -55,7 +55,6 @@ public class AdminController {
     }
 
 
-
     // 경기 정보 추가 201
     @Operation(summary = "경기 정보 추가")
     @PostMapping("/game")
@@ -121,6 +120,13 @@ public class AdminController {
         adminService.updateGameAndSettle(gameId, request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "bet에 없는 경기로 bet 초깃값 생성")
+    @PostMapping("/bet/db-update")
+    public ResponseEntity<String> updateBetDB() {
+        int createdCount = adminService.updateBetDB();
+        return ResponseEntity.ok("bet 초기 데이터 " + createdCount + "건이 생성되었습니다.");
     }
 
 }
