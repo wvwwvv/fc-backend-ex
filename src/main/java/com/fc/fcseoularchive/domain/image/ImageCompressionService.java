@@ -13,12 +13,14 @@ import java.io.IOException;
 public class ImageCompressionService {
 
     private static final int MAX_DIMENSION = 1080;
-    private static final double JPEG_QUALITY = 0.80;
+    private static final double JPEG_QUALITY = 1.0;
+    private static final double PNG_QUALITY = 0.80;
 
     /**
      * 이미지를 thumbnail 로 압축함, 최대 1080px on the longest side.
      * Thumbnailator 가 비율을 보존한다
      * PNG는 투명 배경 보존을 위해 PNG 포맷 유지, JPG는 0.8 품질로 압축
+     *
      */
     public byte[] compress(MultipartFile file) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -28,8 +30,12 @@ public class ImageCompressionService {
 
         Thumbnails.of(file.getInputStream())
                 .size(MAX_DIMENSION, MAX_DIMENSION)
-                .outputFormat(isPng ? "png" : "jpg")      // 포맷이 png 파일 이라면, png
-                .outputQuality(isPng ? 1.0 : JPEG_QUALITY)
+//                .outputFormat(isPng ? "png" : "jpg")      // 포맷이 png 파일 이라면, png
+//                .outputQuality(isPng ? 1.0 : JPEG_QUALITY)
+                .outputFormat(isPng ? "png" : "jpg")
+                .outputQuality(isPng ? PNG_QUALITY : JPEG_QUALITY)
+
+
                 .toOutputStream(out);
         return out.toByteArray();
     }
