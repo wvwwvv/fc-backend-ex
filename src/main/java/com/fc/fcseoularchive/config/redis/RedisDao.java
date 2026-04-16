@@ -1,3 +1,4 @@
+/*
 package com.fc.fcseoularchive.config.redis;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,3 +44,4 @@ public class RedisDao {
     }
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.fc.fcseoularchive.config.redis;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -58,7 +59,8 @@ public class RedisConfig {
     // RedisTemplate은 DB 서버에 Set, Get, Delete 등을 사용할 수 있음
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper redisObjectMapper){
-       /* // RedisTemplate는 트랜잭션을 지원함.
+       */
+/* // RedisTemplate는 트랜잭션을 지원함.
         // 트랜잭션 안에서 오류가 발생한다면 -> 그 작업 모두 취소 가능
 
         // Redis와 통신할 때 사용할 템플릿 설정하기
@@ -73,7 +75,8 @@ public class RedisConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
 
-        return redisTemplate;*/
+        return redisTemplate;*//*
+
 
 
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -130,3 +133,4 @@ public class RedisConfig {
 
 }
 
+*/

@@ -72,7 +72,9 @@ public class SecurityConfig {
                                                 "/api/games/guest",
                                                 "/api/players/**",
                                                 "/api/rankings/**",
-                                                "/upload/**"
+                                                "/upload/**",
+                                                "/actuator/**",
+                                                "/api/auth/**"
 
 
 //                                        /** 일단.. 불편해서 다 열어주고 개발 운영 시 꼭 지정해주기 ! */
@@ -115,13 +117,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> origins = new ArrayList<>();
-        origins.add("http://localhost:5173");
-        origins.add("https://raichu.inwoohub.com");
-        origins.add("https://fcraichu.inwoohub.com");
-        origins.add("https://fc-raichu.vercel.app");
-
-        configuration.setAllowedOrigins(origins);
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://fc-raichu.vercel.app", "https://fcraichu.inwoohub.com"));
+//        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://raichu.inwoohub.com", "https://fc-raichu.vercel.app", "https://fcraichu.inwoohub.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
@@ -150,14 +147,18 @@ public class SecurityConfig {
         public Collection<GrantedAuthority> convert(Jwt jwt) {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-            // 클레임에서 "role" 꺼내기
-            String role = jwt.getClaim("role");
-            if (role == null) {
-                // 없다면 바로 반환
+            List<String> roles = jwt.getClaimAsStringList("role");
+
+            if(roles == null){
                 return authorities;
-            } else {
-                // 있다면 권한 리스트에 추가해주기
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+            }
+
+            if(roles.contains("ADMIN")){
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
+
+            if(roles.contains("USER")) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
 
             return authorities;

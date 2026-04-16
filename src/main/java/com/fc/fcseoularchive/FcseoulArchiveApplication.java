@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 @SpringBootApplication
 public class FcseoulArchiveApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(FcseoulArchiveApplication.class, args);
     }
