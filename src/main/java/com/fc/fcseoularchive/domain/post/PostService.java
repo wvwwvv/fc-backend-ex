@@ -10,6 +10,7 @@ import com.fc.fcseoularchive.global.error.ApiException;
 import com.fc.fcseoularchive.domain.game.GameRepository;
 import com.fc.fcseoularchive.domain.user.User;
 import com.fc.fcseoularchive.domain.user.UserRepository;
+import com.fc.fcseoularchive.global.util.FileNameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
@@ -82,22 +83,20 @@ public class PostService {
             List<Image> images = new ArrayList<>();
 
             for (MultipartFile file : request.getImages()) {
-                if (file == null || file.isEmpty()) continue; // 안전하게 처리
+                if (file == null || file.isEmpty()) continue;
 
                 String rawFileName = file.getOriginalFilename();
                 if (rawFileName == null || rawFileName.isBlank()) continue;
 
-                String fileName = UUID.randomUUID() + "_" + rawFileName;
+                // ✅ 확장자 떼고 .webp 붙이기
+                String nameWithoutExt = FileNameUtils.stripExtension(rawFileName);
+                String fileName = UUID.randomUUID() + "_" + nameWithoutExt + ".webp";
 
-//                file.transferTo(destination);
-
-                // 이미지 컴프레션으로 저장
                 File destination = new File(uploadDir, fileName);
                 byte[] compressed = imageCompressionService.compress(file);
                 try (FileOutputStream fos = new FileOutputStream(destination)) {
                     fos.write(compressed);
                 }
-
 
                 String imagePath = "/upload/post/" + fileName;
 
@@ -234,8 +233,10 @@ public class PostService {
                 String rawFileName = file.getOriginalFilename();
                 if (rawFileName == null || rawFileName.isBlank()) continue;
 
-                String fileName = UUID.randomUUID() + "_" + rawFileName;
+//                String fileName = UUID.randomUUID() + "_" + rawFileName;
 //                file.transferTo(destination);
+
+                String fileName = FileNameUtils.generateWebpFileName(rawFileName);
                 File destination = new File(uploadDir, fileName);
                 byte[] compressed = imageCompressionService.compress(file);
                 try (FileOutputStream fos = new FileOutputStream(destination)) {
