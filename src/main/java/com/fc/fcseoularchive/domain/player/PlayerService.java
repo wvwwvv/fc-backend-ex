@@ -8,6 +8,7 @@ import com.fc.fcseoularchive.domain.player.dto.CreatePlayerRequest;
 import com.fc.fcseoularchive.domain.player.dto.PlayerResponse;
 import com.fc.fcseoularchive.domain.player.dto.PlayerResponseRank;
 import com.fc.fcseoularchive.domain.player.dto.UpdatePlayerReqeust;
+import com.fc.fcseoularchive.global.util.FileNameUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,11 +34,9 @@ public class PlayerService {
 
     private final String uploadDir = System.getProperty("user.dir") + "/upload/player";
 
-    // 선수 생성
     @Transactional
     @CacheEvict(value = "allPlayers", allEntries = true)
     public void createPlayer(CreatePlayerRequest req) throws IOException {
-
 
         byte[] compressed = imageCompressionService.compress(req.getImage());
 
@@ -50,22 +49,22 @@ public class PlayerService {
         // 이미지가 null이 아니고, 비어있지 않다면
         String imagePath = null;
         if (req.getImage() != null && !req.getImage().isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + req.getImage().getOriginalFilename(); // UUID_파일 이름으로 파일 이름 지정해주기
-            File dest = new File(uploadDir, fileName); // 경로/fileName 으로 파일 만듦
-//            req.getImage().transferTo(dest); // 실제 파일 저장해두기
-            // 기존 원본 -> 이미지 컴프레션 적용한것으로 저장
+
+            // JPG or PNG -> webp 으로 바꾸기
+            String fileName = FileNameUtils.generateWebpFileName(req.getImage().getOriginalFilename());
+
+            File dest = new File(uploadDir, fileName);
+
             try (FileOutputStream fos = new FileOutputStream(dest)) {
                 fos.write(compressed);
             }
 
-            imagePath = "/upload/player/" + fileName; // 이렇게 해야 db에 저장을 상대경로로 저장해서 프론트에서 바로 사용 가능함 !
+            imagePath = "/upload/player/" + fileName;
         }
 
-        // 객체 생성
         Player player = new Player(req, imagePath);
         playerRepository.save(player);
     }
-
 
     // 선수 전체 조회 (현역, 임대, 은퇴)
     public List<PlayerResponse> getAllPlayersV1() {
@@ -251,7 +250,8 @@ public class PlayerService {
 
     /**
      * 플레이어 기준으로 그룹핑된 도네이션들중 포인트를 내림차순으로 정렬 후 상위 3개만 반환하는 메서드
-     * @param p : Player 객체
+     *
+     * @param p       : Player 객체
      * @param donaMap : <player.id, Donation> 으로 이루어진 그루핑된 HashMap
      * @return
      */
@@ -264,6 +264,7 @@ public class PlayerService {
 
     /**
      * 1 : user1, 2 : user2 랭킹 및 유저닉네임을 담기위해 만들어진 HashMap
+     *
      * @param donationList : 플레이어 기준으로 그룹핑된 도네이션들중 포인트를 내림차순으로 정렬 후 상위 3개
      * @param nicknameList : 들어올때는 빈 HashMap
      */
@@ -278,7 +279,9 @@ public class PlayerService {
     }
 
 
-    /** 여기서부터는 나중에 쓸 수도 있는 것 */
+    /**
+     * 여기서부터는 나중에 쓸 수도 있는 것
+     */
 
     // 현역 + FW 선수 전체 조회
     public List<PlayerResponse> getAllFWActivePlayers() {
